@@ -19,7 +19,7 @@ public class Main extends Application {
 			Scene scene = new Scene(root,434,300);
 			
 			primaryStage.setScene(scene);
-			primaryStage.setTitle("Event Planner App");
+			primaryStage.setTitle("Event Planner Application");
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
