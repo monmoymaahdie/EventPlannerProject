@@ -117,8 +117,9 @@ public class EventPlannerController{
 		items.add(menuItems.getAppetizer());
 		items.add(menuItems.getMainCourse());
 		items.add(menuItems.getDessert());
+
+		ArrayList<String>
 		
-	
 		for (String item : items) {
 			Label itemLabel = new Label(item);
 			Label costLabel = new Label("Enter Cost Per Serving:");
@@ -126,9 +127,12 @@ public class EventPlannerController{
 			Label priceLabel = new Label("Enter Price Per Serving");
 			TextField priceTextField = new TextField();
 			
+			CostAndPrice menuOptionsSelected = new CostAndPrice(item, costTextField.getText(), priceTextField.getText());
 			
-			itemContainer.getChildren().addAll(itemLabel, costLabel, costTextField, priceLabel, priceTextField);
 		}
+		
+		Button doneButton = new Button ("Done!");
+		doneButton.setOnAction(doneEvent -> calculateTotalCostAndProfit(mainScene, ));
 		
 		costItems.getChildren().add(itemContainer);
 
@@ -139,6 +143,8 @@ public class EventPlannerController{
 	
 	
 	}
+	
+	
 
 	public void setApplicationStage(Stage primaryStage) {
 		this.applicationStage = primaryStage;
