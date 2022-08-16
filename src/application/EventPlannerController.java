@@ -1,6 +1,7 @@
 package application;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 
 import javafx.collections.FXCollections;
@@ -27,6 +28,10 @@ public class EventPlannerController{
 	private MainCourse mainChoices = new MainCourse();
 	private Dessert dessertChoices = new Dessert();
 	
+	 // HashMap -> HashMap
+	 HashMap<String, MenuItem> appHash= new HashMap<String, MenuItem>();
+	 HashMap<String, MenuItem> mainHash= new HashMap<String, MenuItem>();
+	 HashMap<String, MenuItem> dessertHash= new HashMap<String, MenuItem>();
 	
 
     @FXML
@@ -46,28 +51,30 @@ public class EventPlannerController{
     	VBox menuSelect = new VBox();
     	
     	//Add scene title and ChoiceBoxes for menu items 
-    	
-    	//Set padding for each control
-    	//https://www.demo2s.com/java/javafx-space-padding-and-margin.html#:~:text=setPadding(new%20Insets(10))%3B,%2C%2010%2C%2020%2C%2010))%3B
     	Label menuSelectTitle = new Label ("Menu Selection for Each Day");
-    	menuSelectTitle.setPadding(new Insets(0,0,20,150));
     	menuSelectTitle.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 20)); 
-    	
     	
     	HBox menuRow = new HBox();
     	Label eventDay = new Label("");
+    	
     	Label appetizerSelect = new Label("Select Appetizer");
-    	appetizerSelect.setPadding(new Insets(10,20,10,80));
+    	
     	
     	Label mainCourseSelect = new Label("Select Main Course");
-    	mainCourseSelect.setPadding(new Insets(10,30,10,50));
+    	
     	
     	Label dessertSelect = new Label("Select Dessert");
-    	dessertSelect.setPadding(new Insets(10,40,10,50));
+    	
     	
     	menuRow.getChildren().addAll(eventDay,appetizerSelect, mainCourseSelect, dessertSelect);
     	
     	menuSelect.getChildren().addAll(menuSelectTitle, menuRow);
+    	
+    	// Set Padding
+    	menuSelectTitle.setPadding(new Insets(0,0,20,150));
+    	appetizerSelect.setPadding(new Insets(10,20,10,80));
+    	mainCourseSelect.setPadding(new Insets(10,30,10,50));
+    	dessertSelect.setPadding(new Insets(10,40,10,50));
     	
     	//Error Label
     	Label errorMessage = new Label ("");
@@ -92,29 +99,33 @@ public class EventPlannerController{
     		//Create labels for each day
     		Label dayLabel = new Label("Day " + rowCount + "");
     		
-    		
     		//Create ChoiceBoxes for appetizer, main course, desserts
     		ChoiceBox<String> appetizerOptions = new ChoiceBox<String>(FXCollections.observableArrayList(Appetizer.getAppetizer()));
     		
     		
     		ChoiceBox<String> mainCourseOptions = new ChoiceBox<String>(FXCollections.observableArrayList(MainCourse.getMainCourse()));
-    		
+    		//mainCourseOptions.getItems().addAll("Placeholder", "Placeholder","Placeholder","Placeholder",
+    				//"Placeholder","Placeholder");
     		
     		ChoiceBox<String> dessertOptions = new ChoiceBox<String>(FXCollections.observableArrayList(Dessert.getDessert()));
+    		//dessertOptions.getItems().addAll("Placeholder", "Placeholder","Placeholder","Placeholder",
+    				//"Placeholder","Placeholder");
     		
-    		HBox.setMargin(dayLabel, new Insets(0,5,10,5)); 
-    		HBox.setMargin(appetizerOptions, new Insets(0,5,10,5)); 
-    		HBox.setMargin(mainCourseOptions, new Insets(0,5,10,5)); 
-    		HBox.setMargin(dessertOptions, new Insets(0,5,10,5)); 
+    		
     		
     		//Button press to change to scene where user can enter price of items
     		Button addCost = new Button("Enter Cost");
-    		HBox.setMargin(addCost, new Insets(0,5,10,5)); 
+    		
     		
     		
     		addCost.setOnAction(addCostEvent ->{
         		ItemSelected menuItemChosen = new ItemSelected(appetizerOptions.getValue(), mainCourseOptions.getValue(),dessertOptions.getValue());
-    			getCostAndPrice(applicationStage.getScene(), menuItemChosen);
+    			try {
+					getCostAndPrice(applicationStage.getScene(), menuItemChosen);
+				} catch (InvalidValueException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
     			
     			
@@ -123,12 +134,19 @@ public class EventPlannerController{
     		menuItemRow.getChildren().addAll(dayLabel, appetizerOptions, mainCourseOptions, dessertOptions, addCost);
     		menuSelect.getChildren().add(menuItemRow);
     		rowCount++;
+    		
+    		//Setting padding
+    		HBox.setMargin(dayLabel, new Insets(0,5,10,5)); 
+    		HBox.setMargin(appetizerOptions, new Insets(0,5,10,5)); 
+    		HBox.setMargin(mainCourseOptions, new Insets(0,5,10,5)); 
+    		HBox.setMargin(dessertOptions, new Insets(0,5,10,5)); 
+    		HBox.setMargin(addCost, new Insets(0,5,10,5));
     	}
     	
     	
     }
 
-	private void getCostAndPrice(Scene scene, ItemSelected menuItems) {
+	private void getCostAndPrice(Scene scene, ItemSelected menuItems) throws InvalidValueException {
     	Scene mainScene = applicationStage.getScene();
  
 		HBox costItems = new HBox();
@@ -141,12 +159,20 @@ public class EventPlannerController{
 		items.add(menuItems.getMainCourse());
 		items.add(menuItems.getDessert());
 		
+		ArrayList<String> types = new ArrayList<String>();
+		types.add("appetizer");
+		types.add("main course");
+		types.add("dessert");
+		
 		ArrayList<TextField> costTextFields = new ArrayList<TextField>();
 		ArrayList<TextField> priceTextFields = new ArrayList<TextField>();
+		
+		ArrayList<MenuItem> itemsMasterList = new ArrayList<MenuItem>();
 
 		int rowCount = 0;
 		while (rowCount < items.size()) {
-
+			
+			String type = types.get(rowCount);
 			Label itemLabel = new Label(items.get(rowCount));
 			Label costLabel = new Label("Enter Cost Per Serving:");
 			TextField costTextField = new TextField();
@@ -156,14 +182,20 @@ public class EventPlannerController{
 			priceTextFields.add(priceTextField);
 			
 			itemContainer.getChildren().addAll(itemLabel,costLabel, costTextField,priceLabel,priceTextField);
+			MenuItem menuOption = new MenuItem(items.get(rowCount),type, costTextField.getText(), priceTextField.getText());
+			itemsMasterList.add(menuOption);
 			rowCount++;
+			
+			System.out.println(menuOption.getName());
 
 		}
 		
 		Button doneButton = new Button ("Done!");
-		doneButton.setOnAction(doneEvent -> calculateTotalCostAndProfit(mainScene, items, costTextFields, priceTextFields));
+		doneButton.setOnAction(doneEvent -> storeTotalCostAndProfit(mainScene, itemsMasterList));
+		//doneButton.setOnAction(doneEvent -> calculateTotalCostAndProfit(mainScene, items, costTextFields, priceTextFields));
 		
 		costItems.getChildren().addAll(itemContainer, doneButton);
+		
 		
 	
 		//change scene
@@ -174,37 +206,38 @@ public class EventPlannerController{
 	}
 
 
-	private void calculateTotalCostAndProfit(Scene menuSelectionScene, ArrayList<String> items,
-			ArrayList<TextField> costTextFields, ArrayList<TextField> priceTextFields) {
+	private void storeTotalCostAndProfit(Scene menuSelectionScene, ArrayList<MenuItem> list) {
 		
 		applicationStage.setScene(menuSelectionScene);
 		
-			
-		//HashMap<String, ArrayList<String>> food = new HashMap<String, ArrayList<String>>();
-			
 		
-		
-			//for(int i = 0; i < items.size(); i++) {
-				//ArrayList<String> stuff = new ArrayList<String>();
-				//stuff.add(costTextFields.get(i).getText());
-				//stuff.add(priceTextFields.get(i).getText());
-				//food.put(items.get(i), stuff);
-			//}
-		
-			for (int i = 0; i <items.size(); i++) {
-				MenuItem appetizer = new MenuItem();
-
+		String type = "";
+		String name = "";
+		int num = 0;
+		 
+		for (int i = 0; i < list.size();i++) {
+			num = i;
+			type = list.get(num).getType();
+		 		
+		 	if (type == "appetizer") {
+		 		appHash.put(list.get(num).getName(), list.get(num));
+		 	}
+			if (type == "main course") {
+				mainHash.put(list.get(num).getName(), list.get(num));
 			}
-			
-			
-			
-			
-			
-			
-			
+			if (type == "dessert") {
+				dessertHash.put(list.get(num).getName(), list.get(num));
+			}
+		}
 		
-		
-		
+		System.out.println(appHash);
+		System.out.println(mainHash);
+		System.out.println(dessertHash);
+		 	 
+		 	 
+		 	 
+		 	 
+	
 	}
 
 	public void setApplicationStage(Stage primaryStage) {
