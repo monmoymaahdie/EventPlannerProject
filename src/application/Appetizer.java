@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import javafx.collections.ObservableArray;
 
-public class Appetizer {
+public class Appetizer extends MenuItem{
 	
 	private static ArrayList<String> appetizerList = new ArrayList<String>();
 	

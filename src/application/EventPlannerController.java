@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -14,6 +15,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class EventPlannerController{
@@ -42,12 +46,25 @@ public class EventPlannerController{
     	VBox menuSelect = new VBox();
     	
     	//Add scene title and ChoiceBoxes for menu items 
+    	
+    	//Set padding for each control
+    	//https://www.demo2s.com/java/javafx-space-padding-and-margin.html#:~:text=setPadding(new%20Insets(10))%3B,%2C%2010%2C%2020%2C%2010))%3B
     	Label menuSelectTitle = new Label ("Menu Selection for Each Day");
+    	menuSelectTitle.setPadding(new Insets(0,0,20,150));
+    	menuSelectTitle.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 20)); 
+    	
+    	
     	HBox menuRow = new HBox();
     	Label eventDay = new Label("");
     	Label appetizerSelect = new Label("Select Appetizer");
+    	appetizerSelect.setPadding(new Insets(10,20,10,80));
+    	
     	Label mainCourseSelect = new Label("Select Main Course");
+    	mainCourseSelect.setPadding(new Insets(10,30,10,50));
+    	
     	Label dessertSelect = new Label("Select Dessert");
+    	dessertSelect.setPadding(new Insets(10,40,10,50));
+    	
     	menuRow.getChildren().addAll(eventDay,appetizerSelect, mainCourseSelect, dessertSelect);
     	
     	menuSelect.getChildren().addAll(menuSelectTitle, menuRow);
@@ -75,20 +92,24 @@ public class EventPlannerController{
     		//Create labels for each day
     		Label dayLabel = new Label("Day " + rowCount + "");
     		
+    		
     		//Create ChoiceBoxes for appetizer, main course, desserts
     		ChoiceBox<String> appetizerOptions = new ChoiceBox<String>(FXCollections.observableArrayList(Appetizer.getAppetizer()));
     		
     		
     		ChoiceBox<String> mainCourseOptions = new ChoiceBox<String>(FXCollections.observableArrayList(MainCourse.getMainCourse()));
-    		//mainCourseOptions.getItems().addAll("Placeholder", "Placeholder","Placeholder","Placeholder",
-    				//"Placeholder","Placeholder");
+    		
     		
     		ChoiceBox<String> dessertOptions = new ChoiceBox<String>(FXCollections.observableArrayList(Dessert.getDessert()));
-    		//dessertOptions.getItems().addAll("Placeholder", "Placeholder","Placeholder","Placeholder",
-    				//"Placeholder","Placeholder");
+    		
+    		HBox.setMargin(dayLabel, new Insets(0,5,10,5)); 
+    		HBox.setMargin(appetizerOptions, new Insets(0,5,10,5)); 
+    		HBox.setMargin(mainCourseOptions, new Insets(0,5,10,5)); 
+    		HBox.setMargin(dessertOptions, new Insets(0,5,10,5)); 
     		
     		//Button press to change to scene where user can enter price of items
     		Button addCost = new Button("Enter Cost");
+    		HBox.setMargin(addCost, new Insets(0,5,10,5)); 
     		
     		
     		addCost.setOnAction(addCostEvent ->{
