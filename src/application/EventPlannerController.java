@@ -159,19 +159,22 @@ public class EventPlannerController{
 		applicationStage.setScene(menuSelectionScene);
 		
 			
-		HashMap<String, ArrayList<String>> food = new HashMap<String, ArrayList<String>>();
+		//HashMap<String, ArrayList<String>> food = new HashMap<String, ArrayList<String>>();
 			
-			for(int i = 0; i < items.size(); i++) {
-				ArrayList<String> stuff = new ArrayList<String>();
-				stuff.add(costTextFields.get(i).getText());
-				stuff.add(priceTextFields.get(i).getText());
-				food.put(items.get(i), stuff);
-			}
+		
+		
+			//for(int i = 0; i < items.size(); i++) {
+				//ArrayList<String> stuff = new ArrayList<String>();
+				//stuff.add(costTextFields.get(i).getText());
+				//stuff.add(priceTextFields.get(i).getText());
+				//food.put(items.get(i), stuff);
+			//}
+		
 			
-			System.out.println(food);
+			MenuItem appetizer = new MenuItem();
 			
 			
-			CostTotal budget = new CostTotal();
+			
 			
 			
 			
