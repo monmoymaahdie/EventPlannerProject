@@ -170,8 +170,10 @@ public class EventPlannerController{
 				//food.put(items.get(i), stuff);
 			//}
 		
-			
-			MenuItem appetizer = new MenuItem();
+			for (int i = 0; i <items.size(); i++) {
+				MenuItem appetizer = new MenuItem();
+
+			}
 			
 			
 			
