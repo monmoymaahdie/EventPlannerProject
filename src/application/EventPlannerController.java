@@ -1,6 +1,7 @@
 package application;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -156,6 +157,25 @@ public class EventPlannerController{
 			ArrayList<TextField> costTextFields, ArrayList<TextField> priceTextFields) {
 		
 		applicationStage.setScene(menuSelectionScene);
+		
+			
+		HashMap<String, ArrayList<String>> food = new HashMap<String, ArrayList<String>>();
+			
+			for(int i = 0; i < items.size(); i++) {
+				ArrayList<String> stuff = new ArrayList<String>();
+				stuff.add(costTextFields.get(i).getText());
+				stuff.add(priceTextFields.get(i).getText());
+				food.put(items.get(i), stuff);
+			}
+			
+			System.out.println(food);
+			
+			
+			CostTotal budget = new CostTotal();
+			
+			
+			
+			
 		
 		
 		
