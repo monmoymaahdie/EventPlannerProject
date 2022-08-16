@@ -1,6 +1,7 @@
 package application;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 
 import javafx.collections.FXCollections;
@@ -23,6 +24,12 @@ public class EventPlannerController{
 	private MainCourse mainChoices = new MainCourse();
 	private Dessert dessertChoices = new Dessert();
 	
+	int j = 0;
+	
+	 // HashMap -> HashMap
+	 HashMap<Integer, MenuItem> appHash= new HashMap<Integer, MenuItem>();
+	 HashMap<Integer, MenuItem> mainHash= new HashMap<Integer, MenuItem>();
+	 HashMap<Integer, MenuItem> dessertHash= new HashMap<Integer, MenuItem>();
 	
 
     @FXML
@@ -93,7 +100,12 @@ public class EventPlannerController{
     		
     		addCost.setOnAction(addCostEvent ->{
         		ItemSelected menuItemChosen = new ItemSelected(appetizerOptions.getValue(), mainCourseOptions.getValue(),dessertOptions.getValue());
-    			getCostAndPrice(applicationStage.getScene(), menuItemChosen);
+    			try {
+					getCostAndPrice(applicationStage.getScene(), menuItemChosen);
+				} catch (InvalidValueException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
     			
     			
@@ -107,7 +119,7 @@ public class EventPlannerController{
     	
     }
 
-	private void getCostAndPrice(Scene scene, ItemSelected menuItems) {
+	private void getCostAndPrice(Scene scene, ItemSelected menuItems) throws InvalidValueException {
     	Scene mainScene = applicationStage.getScene();
  
 		HBox costItems = new HBox();
@@ -120,12 +132,20 @@ public class EventPlannerController{
 		items.add(menuItems.getMainCourse());
 		items.add(menuItems.getDessert());
 		
+		ArrayList<String> types = new ArrayList<String>();
+		types.add("appetizer");
+		types.add("main course");
+		types.add("dessert");
+		
 		ArrayList<TextField> costTextFields = new ArrayList<TextField>();
 		ArrayList<TextField> priceTextFields = new ArrayList<TextField>();
+		
+		ArrayList<MenuItem> itemsMasterList = new ArrayList<MenuItem>();
 
 		int rowCount = 0;
 		while (rowCount < items.size()) {
-
+			
+			String type = types.get(rowCount);
 			Label itemLabel = new Label(items.get(rowCount));
 			Label costLabel = new Label("Enter Cost Per Serving:");
 			TextField costTextField = new TextField();
@@ -135,14 +155,20 @@ public class EventPlannerController{
 			priceTextFields.add(priceTextField);
 			
 			itemContainer.getChildren().addAll(itemLabel,costLabel, costTextField,priceLabel,priceTextField);
+			MenuItem menuOption = new MenuItem(items.get(rowCount),type, costTextField.getText(), priceTextField.getText());
+			itemsMasterList.add(menuOption);
 			rowCount++;
+			
+			System.out.println(menuOption.getName());
 
 		}
 		
 		Button doneButton = new Button ("Done!");
-		doneButton.setOnAction(doneEvent -> calculateTotalCostAndProfit(mainScene, items, costTextFields, priceTextFields));
+		doneButton.setOnAction(doneEvent -> storeTotalCostAndProfit(mainScene, itemsMasterList, eventDurationChoicebox.getValue()));
+		//doneButton.setOnAction(doneEvent -> calculateTotalCostAndProfit(mainScene, items, costTextFields, priceTextFields));
 		
 		costItems.getChildren().addAll(itemContainer, doneButton);
+		
 		
 	
 		//change scene
@@ -153,37 +179,45 @@ public class EventPlannerController{
 	}
 
 
-	private void calculateTotalCostAndProfit(Scene menuSelectionScene, ArrayList<String> items,
-			ArrayList<TextField> costTextFields, ArrayList<TextField> priceTextFields) {
+	private void storeTotalCostAndProfit(Scene menuSelectionScene, ArrayList<MenuItem> list, int day) {
 		
 		applicationStage.setScene(menuSelectionScene);
 		
-			
-		//HashMap<String, ArrayList<String>> food = new HashMap<String, ArrayList<String>>();
-			
+		String type = "";
+		String name = "";
+		int num = 0;
+		
+		//get key for day
 		
 		
-			//for(int i = 0; i < items.size(); i++) {
-				//ArrayList<String> stuff = new ArrayList<String>();
-				//stuff.add(costTextFields.get(i).getText());
-				//stuff.add(priceTextFields.get(i).getText());
-				//food.put(items.get(i), stuff);
-			//}
-		
-			for (int i = 0; i <items.size(); i++) {
-				MenuItem appetizer = new MenuItem();
-
+		for (int i = 0; i < list.size();i++) {
+			if (i % 3 == 0) {
+				j++;
 			}
 			
+			type = list.get(i).getType();
+		 		
+		 	if (type == "appetizer") {
+		 		appHash.put(j, list.get(num));
+		 	}
+			if (type == "main course") {
+				mainHash.put(j, list.get(num));
+			}
+			if (type == "dessert") {
+				dessertHash.put(j, list.get(num));
+			}
+		}
 			
-			
-			
-			
-			
-			
+		int x = appHash.get(1).getCost();
 		
-		
-		
+		System.out.println(appHash);
+		System.out.println(mainHash);
+		System.out.println(dessertHash);
+		 	 
+		 	 
+		 	 
+		 	 
+	
 	}
 
 	public void setApplicationStage(Stage primaryStage) {

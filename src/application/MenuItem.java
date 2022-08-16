@@ -6,7 +6,11 @@ public class MenuItem {
 	private int cost;
 	private int price;
 	
-	public  MenuItem(String name, String type, String cost, String price) throws InvalidValueException {
+	public MenuItem() {
+		
+	}
+	
+	public MenuItem(String name, String type, String cost, String price) throws InvalidValueException {
 		this.name = name;
 		this.type = type;
 		
@@ -53,17 +57,17 @@ public class MenuItem {
 			return this.name;
 		}
 		
-		public String type() {
+		public String getType() {
 			return this.type;
 		}
 		
-		public int cost() {
+		public int getCost() {
 			return this.cost;
 		}
 		
-		public int price() {
+		public int getPrice() {
 			return this.price;
 		}
 	
-	
+		
 }
