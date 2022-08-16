@@ -2,7 +2,7 @@ package application;
 
 import java.util.ArrayList;
 
-public class Dessert {
+public class Dessert extends MenuItem{
 	
 	private static ArrayList<String> dessertList = new ArrayList<String>();
 	
