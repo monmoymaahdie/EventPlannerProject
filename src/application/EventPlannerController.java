@@ -92,7 +92,7 @@ public class EventPlannerController{
     		
     		addCost.setOnAction(addCostEvent ->{
         		ItemSelected menuItemChosen = new ItemSelected(appetizerOptions.getValue(), mainCourseOptions.getValue(),dessertOptions.getValue());
-    			getCost(applicationStage.getScene(), menuItemChosen);
+    			getCostAndPrice(applicationStage.getScene(), menuItemChosen);
 
     			
     			
@@ -106,8 +106,9 @@ public class EventPlannerController{
     	
     }
 
-	private void getCost(Scene scene, ItemSelected menuItems) {
-		
+	private void getCostAndPrice(Scene scene, ItemSelected menuItems) {
+    	Scene mainScene = applicationStage.getScene();
+ 
 		HBox costItems = new HBox();
 		
 		
@@ -118,19 +119,32 @@ public class EventPlannerController{
 		items.add(menuItems.getMainCourse());
 		items.add(menuItems.getDessert());
 		
-	
-		for (String item : items) {
-			Label itemLabel = new Label(item);
+		ArrayList<TextField> costTextFields = new ArrayList<TextField>();
+		ArrayList<TextField> priceTextFields = new ArrayList<TextField>();
+
+		int rowCount = 0;
+		while (rowCount < items.size()) {
+
+			Label itemLabel = new Label(items.get(rowCount));
 			Label costLabel = new Label("Enter Cost Per Serving:");
 			TextField costTextField = new TextField();
+			costTextFields.add(costTextField);
 			Label priceLabel = new Label("Enter Price Per Serving");
 			TextField priceTextField = new TextField();
+			priceTextFields.add(priceTextField);
 			
-			
-			itemContainer.getChildren().addAll(itemLabel, costLabel, costTextField, priceLabel, priceTextField);
+			itemContainer.getChildren().addAll(itemLabel,costLabel, costTextField,priceLabel,priceTextField);
+			rowCount++;
+
 		}
 		
-		costItems.getChildren().add(itemContainer);
+		Button doneButton = new Button ("Done!");
+		doneButton.setOnAction(doneEvent -> calculateTotalCostAndProfit(mainScene, items, costTextFields, priceTextFields));
+		
+		costItems.getChildren().addAll(itemContainer, doneButton);
+		
+		
+		
 
 	
 		//change scene
@@ -138,6 +152,15 @@ public class EventPlannerController{
 		applicationStage.setScene(costScene);
 	
 	
+	}
+	
+	
+
+	private void calculateTotalCostAndProfit(Scene mainScene, ArrayList<String> items,
+			ArrayList<TextField> costTextFields, ArrayList<TextField> priceTextFields) {
+		
+		
+		
 	}
 
 	public void setApplicationStage(Stage primaryStage) {
