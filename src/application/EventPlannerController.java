@@ -143,9 +143,6 @@ public class EventPlannerController{
 		
 		costItems.getChildren().addAll(itemContainer, doneButton);
 		
-		
-		
-
 	
 		//change scene
 		Scene costScene = new Scene(costItems);
@@ -155,8 +152,10 @@ public class EventPlannerController{
 	}
 
 
-	private void calculateTotalCostAndProfit(Scene mainScene, ArrayList<String> items,
+	private void calculateTotalCostAndProfit(Scene menuSelectionScene, ArrayList<String> items,
 			ArrayList<TextField> costTextFields, ArrayList<TextField> priceTextFields) {
+		
+		applicationStage.setScene(menuSelectionScene);
 		
 		
 		
