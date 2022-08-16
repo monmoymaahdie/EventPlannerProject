@@ -153,8 +153,7 @@ public class EventPlannerController{
 	
 	
 	}
-	
-	
+
 
 	private void calculateTotalCostAndProfit(Scene mainScene, ArrayList<String> items,
 			ArrayList<TextField> costTextFields, ArrayList<TextField> priceTextFields) {
