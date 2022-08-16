@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.collections.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -62,7 +63,27 @@
             </ChoiceBox>
          </children>
       </HBox>
-      <Button fx:id="startButton"  mnemonicParsing="false" onAction="#startEvent" prefHeight="26.0" prefWidth="254.0" text="Get Started!">
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="26.0" prefWidth="195.0" text="Select Duration of Event">
+               <HBox.margin>
+                  <Insets left="70.0" top="30.0" />
+               </HBox.margin>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+               <font>
+                  <Font name="Arial" size="12.0" />
+               </font>
+            </Label>
+            <TextField fx:id="guestsTextField" prefHeight="31.0" prefWidth="129.0">
+               <HBox.margin>
+                  <Insets left="30.0" top="30.0" />
+               </HBox.margin>
+            </TextField>
+         </children>
+      </HBox>
+      <Button fx:id="startButton" mnemonicParsing="false" onAction="#startEvent" prefHeight="26.0" prefWidth="254.0" text="Get Started!">
          <VBox.margin>
             <Insets bottom="30.0" left="90.0" top="30.0" />
          </VBox.margin>
