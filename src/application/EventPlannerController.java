@@ -92,7 +92,7 @@ public class EventPlannerController{
     		
     		addCost.setOnAction(addCostEvent ->{
         		ItemSelected menuItemChosen = new ItemSelected(appetizerOptions.getValue(), mainCourseOptions.getValue(),dessertOptions.getValue());
-    			getCost(applicationStage.getScene(), menuItemChosen);
+    			getCostAndPrice(applicationStage.getScene(), menuItemChosen);
 
     			
     			
@@ -106,7 +106,7 @@ public class EventPlannerController{
     	
     }
 
-	private void getCost(Scene scene, ItemSelected menuItems) {
+	private void getCostAndPrice(Scene scene, ItemSelected menuItems) {
 		
 		HBox costItems = new HBox();
 		
