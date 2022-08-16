@@ -10,13 +10,13 @@ public class Appetizer {
 	private static ArrayList<String> appetizerList = new ArrayList<String>();
 	
 	public Appetizer() {
-		appetizerList.add("Placeholder");
-		appetizerList.add("Placeholder");
-		appetizerList.add("Placeholder");
-		appetizerList.add("Placeholder");
-		appetizerList.add("Placeholder");
-		appetizerList.add("Placeholder");
-		appetizerList.add("Placeholder");
+		appetizerList.add("wow");
+		appetizerList.add("wow");
+		appetizerList.add("wow");
+		appetizerList.add("wow");
+		appetizerList.add("wow");
+		appetizerList.add("wow");
+		appetizerList.add("wow");
 
 	}
 	

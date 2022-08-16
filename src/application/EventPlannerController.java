@@ -68,24 +68,23 @@ public class EventPlannerController{
     	//while loop to create labels, ChoiceBoxes, and button
     	int numberOfDays = eventDurationChoicebox.getValue();
     	int rowCount = 1;
-    	while (rowCount < numberOfDays) {
+    	while (rowCount - 1 < numberOfDays) {
     		HBox menuItemRow = new HBox();
     		
     		//Create labels for each day
     		Label dayLabel = new Label("Day " + rowCount + "");
     		
     		//Create ChoiceBoxes for appetizer, main course, desserts
-    		ChoiceBox<String> appetizerOptions = new ChoiceBox<String>();
-    		appetizerOptions.getItems().addAll("Placeholder", "Placeholder","Placeholder","Placeholder",
-    				"Placeholder","Placeholder");
+    		ChoiceBox<String> appetizerOptions = new ChoiceBox<String>(FXCollections.observableArrayList(Appetizer.getAppetizer()));
     		
-    		ChoiceBox<String> mainCourseOptions = new ChoiceBox<String>();
-    		mainCourseOptions.getItems().addAll("Placeholder", "Placeholder","Placeholder","Placeholder",
-    				"Placeholder","Placeholder");
     		
-    		ChoiceBox<String> dessertOptions = new ChoiceBox<String>();
-    		dessertOptions.getItems().addAll("Placeholder", "Placeholder","Placeholder","Placeholder",
-    				"Placeholder","Placeholder");
+    		ChoiceBox<String> mainCourseOptions = new ChoiceBox<String>(FXCollections.observableArrayList(MainCourse.getMainCourse()));
+    		//mainCourseOptions.getItems().addAll("Placeholder", "Placeholder","Placeholder","Placeholder",
+    				//"Placeholder","Placeholder");
+    		
+    		ChoiceBox<String> dessertOptions = new ChoiceBox<String>(FXCollections.observableArrayList(Dessert.getDessert()));
+    		//dessertOptions.getItems().addAll("Placeholder", "Placeholder","Placeholder","Placeholder",
+    				//"Placeholder","Placeholder");
     		
     		//Button press to change to scene where user can enter price of items
     		Button addCost = new Button("Enter Cost");

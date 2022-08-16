@@ -6,9 +6,9 @@ public class ItemSelected {
 	private String mainCourse;
 	private String dessert;
 	
-	public ItemSelected(String app, String main, String dessert) {
-		this.appetizer = app;
-		this.mainCourse = main;
+	public ItemSelected(String appetizer, String mainCourse, String dessert) {
+		this.appetizer = appetizer;
+		this.mainCourse = mainCourse;
 		this.dessert = dessert;
 	}
 	
@@ -31,8 +31,8 @@ public class ItemSelected {
 		return this.dessert;
 	}
 	
-	public void setAppetizer(String app) {
-		this.appetizer = app;
+	public void setAppetizer(String appetizer) {
+		this.appetizer = appetizer;
 	}
 	
 	public void setMainCourse(String mainCourse) {
