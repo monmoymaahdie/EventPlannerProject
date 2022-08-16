@@ -107,7 +107,8 @@ public class EventPlannerController{
     }
 
 	private void getCostAndPrice(Scene scene, ItemSelected menuItems) {
-		
+    	Scene mainScene = applicationStage.getScene();
+ 
 		HBox costItems = new HBox();
 		
 		
@@ -117,24 +118,33 @@ public class EventPlannerController{
 		items.add(menuItems.getAppetizer());
 		items.add(menuItems.getMainCourse());
 		items.add(menuItems.getDessert());
-
-		ArrayList<String>
 		
-		for (String item : items) {
-			Label itemLabel = new Label(item);
+		ArrayList<TextField> costTextFields = new ArrayList<TextField>();
+		ArrayList<TextField> priceTextFields = new ArrayList<TextField>();
+
+		int rowCount = 0;
+		while (rowCount < items.size()) {
+
+			Label itemLabel = new Label(items.get(rowCount));
 			Label costLabel = new Label("Enter Cost Per Serving:");
 			TextField costTextField = new TextField();
+			costTextFields.add(costTextField);
 			Label priceLabel = new Label("Enter Price Per Serving");
 			TextField priceTextField = new TextField();
+			priceTextFields.add(priceTextField);
 			
-			CostAndPrice menuOptionsSelected = new CostAndPrice(item, costTextField.getText(), priceTextField.getText());
-			
+			itemContainer.getChildren().addAll(itemLabel,costLabel, costTextField,priceLabel,priceTextField);
+			rowCount++;
+
 		}
 		
 		Button doneButton = new Button ("Done!");
-		doneButton.setOnAction(doneEvent -> calculateTotalCostAndProfit(mainScene, ));
+		doneButton.setOnAction(doneEvent -> calculateTotalCostAndProfit(mainScene, items, costTextFields, priceTextFields));
 		
-		costItems.getChildren().add(itemContainer);
+		costItems.getChildren().addAll(itemContainer, doneButton);
+		
+		
+		
 
 	
 		//change scene
@@ -143,8 +153,14 @@ public class EventPlannerController{
 	
 	
 	}
-	
-	
+
+
+	private void calculateTotalCostAndProfit(Scene mainScene, ArrayList<String> items,
+			ArrayList<TextField> costTextFields, ArrayList<TextField> priceTextFields) {
+		
+		
+		
+	}
 
 	public void setApplicationStage(Stage primaryStage) {
 		this.applicationStage = primaryStage;
