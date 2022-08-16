@@ -47,9 +47,9 @@ public class EventPlannerController{
     	Label appetizerSelect = new Label("Select Appetizer");
     	Label mainCourseSelect = new Label("Select Main Course");
     	Label dessertSelect = new Label("Select Dessert");
-    	menuRow.getChildren().addAll(appetizerSelect, mainCourseSelect, dessertSelect);
+    	menuRow.getChildren().addAll(eventDay,appetizerSelect, mainCourseSelect, dessertSelect);
     	
-    	menuSelect.getChildren().addAll(menuRow);
+    	menuSelect.getChildren().addAll(menuSelectTitle, menuRow);
     	
     	//Error Label
     	Label errorMessage = new Label ("");
@@ -88,7 +88,7 @@ public class EventPlannerController{
     				"Placeholder","Placeholder");
     		
     		//Button press to change to scene where user can enter price of items
-    		Button addCost = new Button("Add Cost");
+    		Button addCost = new Button("Enter Cost");
     		
     		
     		addCost.setOnAction(addCostEvent ->{
@@ -108,34 +108,31 @@ public class EventPlannerController{
     }
 
 	private void getCost(Scene scene, ItemSelected menuItems) {
-		VBox costItems = new VBox();
+		
+		HBox costItems = new HBox();
 		
 		
-		HBox appContainer = new HBox();
-		//for appetizers
-		Label appetizerLabel = new Label(menuItems.getAppetizer());
-		TextField appetizerCostTextField = new TextField();
-		TextField appetizerInventoryTextField = new TextField();
+		VBox itemContainer = new VBox();
 		
-		appContainer.getChildren().addAll(appetizerLabel,appetizerCostTextField, appetizerInventoryTextField);
+		ArrayList<String> items = new ArrayList<String>();
+		items.add(menuItems.getAppetizer());
+		items.add(menuItems.getMainCourse());
+		items.add(menuItems.getDessert());
+		
+	
+		for (String item : items) {
+			Label itemLabel = new Label(item);
+			Label costLabel = new Label("Enter Cost Per Serving:");
+			TextField costTextField = new TextField();
+			Label priceLabel = new Label("Enter Price Per Serving");
+			TextField priceTextField = new TextField();
+			
+			
+			itemContainer.getChildren().addAll(itemLabel, costLabel, costTextField, priceLabel, priceTextField);
+		}
+		
+		costItems.getChildren().add(itemContainer);
 
-		HBox mainCourseContainer = new HBox();
-		//for mainCourse
-		Label mainCourseLabel = new Label(menuItems.getMainCourse());
-		TextField mainCourseCostTextField = new TextField();
-		TextField mainCourseInventoryTextField = new TextField();
-		
-		mainCourseContainer.getChildren().addAll(mainCourseLabel,mainCourseCostTextField, mainCourseInventoryTextField);
-		
-		HBox dessertContainer = new HBox();
-		//for mainCourse
-		Label dessertLabel = new Label(menuItems.getMainCourse());
-		TextField dessertCostTextField = new TextField();
-		TextField dessertInventoryTextField = new TextField();
-		
-		dessertContainer.getChildren().addAll(dessertLabel,dessertCostTextField, dessertInventoryTextField);
-		
-		costItems.getChildren().addAll(appContainer, mainCourseContainer, dessertContainer);
 	
 		//change scene
 		Scene costScene = new Scene(costItems);
