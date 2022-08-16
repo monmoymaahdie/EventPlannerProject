@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -15,6 +16,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class EventPlannerController{
@@ -26,6 +30,7 @@ public class EventPlannerController{
 	
 	int j = 0;
 	
+
 	 // HashMap -> HashMap
 	 HashMap<Integer, MenuItem> appHash= new HashMap<Integer, MenuItem>();
 	 HashMap<Integer, MenuItem> mainHash= new HashMap<Integer, MenuItem>();
@@ -50,14 +55,29 @@ public class EventPlannerController{
     	
     	//Add scene title and ChoiceBoxes for menu items 
     	Label menuSelectTitle = new Label ("Menu Selection for Each Day");
+    	menuSelectTitle.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 20)); 
+    	
     	HBox menuRow = new HBox();
     	Label eventDay = new Label("");
+    	
     	Label appetizerSelect = new Label("Select Appetizer");
+    	
+    	
     	Label mainCourseSelect = new Label("Select Main Course");
+    	
+    	
     	Label dessertSelect = new Label("Select Dessert");
+    	
+    	
     	menuRow.getChildren().addAll(eventDay,appetizerSelect, mainCourseSelect, dessertSelect);
     	
     	menuSelect.getChildren().addAll(menuSelectTitle, menuRow);
+    	
+    	// Set Padding
+    	menuSelectTitle.setPadding(new Insets(0,0,20,150));
+    	appetizerSelect.setPadding(new Insets(10,20,10,80));
+    	mainCourseSelect.setPadding(new Insets(10,30,10,50));
+    	dessertSelect.setPadding(new Insets(10,40,10,50));
     	
     	//Error Label
     	Label errorMessage = new Label ("");
@@ -94,8 +114,11 @@ public class EventPlannerController{
     		//dessertOptions.getItems().addAll("Placeholder", "Placeholder","Placeholder","Placeholder",
     				//"Placeholder","Placeholder");
     		
+    		
+    		
     		//Button press to change to scene where user can enter price of items
     		Button addCost = new Button("Enter Cost");
+    		
     		
     		
     		addCost.setOnAction(addCostEvent ->{
@@ -114,6 +137,13 @@ public class EventPlannerController{
     		menuItemRow.getChildren().addAll(dayLabel, appetizerOptions, mainCourseOptions, dessertOptions, addCost);
     		menuSelect.getChildren().add(menuItemRow);
     		rowCount++;
+    		
+    		//Setting padding
+    		HBox.setMargin(dayLabel, new Insets(0,5,10,5)); 
+    		HBox.setMargin(appetizerOptions, new Insets(0,5,10,5)); 
+    		HBox.setMargin(mainCourseOptions, new Insets(0,5,10,5)); 
+    		HBox.setMargin(dessertOptions, new Insets(0,5,10,5)); 
+    		HBox.setMargin(addCost, new Insets(0,5,10,5));
     	}
     	
     	
@@ -164,7 +194,8 @@ public class EventPlannerController{
 		}
 		
 		Button doneButton = new Button ("Done!");
-		doneButton.setOnAction(doneEvent -> storeTotalCostAndProfit(mainScene, itemsMasterList, eventDurationChoicebox.getValue()));
+
+		doneButton.setOnAction(doneEvent -> storeTotalCostAndProfit(mainScene, itemsMasterList));
 		//doneButton.setOnAction(doneEvent -> calculateTotalCostAndProfit(mainScene, items, costTextFields, priceTextFields));
 		
 		costItems.getChildren().addAll(itemContainer, doneButton);
@@ -179,7 +210,7 @@ public class EventPlannerController{
 	}
 
 
-	private void storeTotalCostAndProfit(Scene menuSelectionScene, ArrayList<MenuItem> list, int day) {
+	private void storeTotalCostAndProfit(Scene menuSelectionScene, ArrayList<MenuItem> list) {
 		
 		applicationStage.setScene(menuSelectionScene);
 		
@@ -188,12 +219,12 @@ public class EventPlannerController{
 		int num = 0;
 		
 		//get key for day
-		
-		
+
 		for (int i = 0; i < list.size();i++) {
 			if (i % 3 == 0) {
 				j++;
 			}
+			num = i;
 			
 			type = list.get(i).getType();
 		 		
@@ -208,8 +239,8 @@ public class EventPlannerController{
 			}
 		}
 			
-		int x = appHash.get(1).getCost();
 		
+	
 		System.out.println(appHash);
 		System.out.println(mainHash);
 		System.out.println(dessertHash);
