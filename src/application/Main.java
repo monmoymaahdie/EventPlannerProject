@@ -18,6 +18,9 @@ public class Main extends Application {
 			VBox root = loader.load(new FileInputStream("src/application/EventPlannerView_(scene1).fxml"));
 			Scene scene = new Scene(root,434,300);
 			
+			EventPlannerController selectionController = (EventPlannerController)loader.getController();
+			selectionController.setApplicationStage(primaryStage);
+			
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("Event Planner Application");
 			primaryStage.show();
