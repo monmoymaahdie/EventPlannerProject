@@ -7,13 +7,13 @@ public class Dessert {
 	private static ArrayList<String> dessertList = new ArrayList<String>();
 	
 		public Dessert() {
-			dessertList.add("wow");
-			dessertList.add("wow");
-			dessertList.add("wow");
-			dessertList.add("wow");
-			dessertList.add("wow");
-			dessertList.add("wow");
-			dessertList.add("wow");
+			dessertList.add("Chocolate Brownie");
+			dessertList.add("Orange Sorbet");
+			dessertList.add("Ice Cream");
+			dessertList.add("Baklava");
+			dessertList.add("Strawberry Shortcake");
+			dessertList.add("Pecan Pie");
+			
 
 	}
 	
