@@ -2,8 +2,13 @@ package application;
 
 public class InvalidValueException extends Exception {
 
-	public InvalidValueException(String errorMessage) {
+	public InvalidValueException() {
 		// TODO Auto-generated constructor stub
 	}
+	public InvalidValueException(String message) {
+		super(message);
+		// TODO Auto-generated constructor stub
+	}
+	
 
 }
