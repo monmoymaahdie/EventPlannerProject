@@ -14,7 +14,7 @@ public class MenuItem {
 		this.name = name;
 		this.type = type;
 		this.cost = cost;
-		this.cost = price;
+		this.price = price;
 		
 		
 	}

@@ -4,9 +4,9 @@ public class Revenue extends ProfitLoss {
 	private double appRev;
 	private double mainRev;
 	private double dessertRev;
-	private int guests;
+	private double guests;
 
-	public Revenue(double appRev, double mainRev, double dessertRev, int guests) {
+	public Revenue(double appRev, double mainRev, double dessertRev, double guests) {
 		this.appRev = appRev;
 		this.mainRev = mainRev;
 		this.dessertRev = dessertRev;
@@ -16,7 +16,7 @@ public class Revenue extends ProfitLoss {
 	
 	double getEventTotalPrice() {
 		
-		double total = (this.appRev + this.mainRev + this.dessertRev)*this.guests;
+		double total = (this.appRev + this.mainRev + this.dessertRev) * this.guests;
 		
 		return total;
 	}
@@ -33,7 +33,7 @@ public class Revenue extends ProfitLoss {
 		return this.dessertRev;
 	}
 	
-	public int getGuests() {
+	public double getGuests() {
 		return this.guests;
 	}
 	
@@ -49,7 +49,7 @@ public class Revenue extends ProfitLoss {
 		this.dessertRev = dessert;
 	}
 	
-	public void setGuests(int guests) {
+	public void setGuests(double guests) {
 		this.guests = guests;
 	}
 

@@ -4,9 +4,9 @@ public class Cost extends ProfitLoss{
 	private double appCost;
 	private double mainCost;
 	private double dessertCost;
-	private int guests;
+	private double guests;
 	
-	public Cost(double appetizerTotalCost, double mainCourseTotalCost, double dessertTotalCost, int guests) {
+	public Cost(double appetizerTotalCost, double mainCourseTotalCost, double dessertTotalCost, double guests) {
 		this.appCost = appetizerTotalCost;
 		this.mainCost = mainCourseTotalCost;
 		this.dessertCost = dessertTotalCost;
@@ -32,7 +32,7 @@ public class Cost extends ProfitLoss{
 		return this.dessertCost;
 	}
 	
-	public int getGuests() {
+	public double getGuests() {
 		return this.guests;
 	}
 	
@@ -48,7 +48,7 @@ public class Cost extends ProfitLoss{
 		this.dessertCost = dessert;
 	}
 	
-	public void setGuests(int guests) {
+	public void setGuests(double guests) {
 		this.guests = guests;
 	}
 }
