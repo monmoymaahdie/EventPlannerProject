@@ -29,13 +29,13 @@ public class EventPlannerController{
 	private Dessert dessertChoices = new Dessert();
 
 	
-	int j = 0;
+	private int j = 0;
 	
 
 	 // HashMap -> HashMap
-	 HashMap<Integer, MenuItem> appHash= new HashMap<Integer, MenuItem>();
-	 HashMap<Integer, MenuItem> mainHash= new HashMap<Integer, MenuItem>();
-	 HashMap<Integer, MenuItem> dessertHash= new HashMap<Integer, MenuItem>();
+	 private HashMap<Integer, MenuItem> appHash= new HashMap<Integer, MenuItem>();
+	 private HashMap<Integer, MenuItem> mainHash= new HashMap<Integer, MenuItem>();
+	 private HashMap<Integer, MenuItem> dessertHash= new HashMap<Integer, MenuItem>();
 	
 
     @FXML
@@ -155,18 +155,14 @@ public class EventPlannerController{
     	menuSelect.getChildren().addAll(buttons);
     }
 
-    /**double appetizerTotalCost = 0.0;
-	double mainCourseTotalCost = 0.0;
-	double dessertTotalCost = 0.0;
-	**/
+
 	private void calculateTotal(VBox mainScene, HashMap<Integer, MenuItem> appHash2,
 			HashMap<Integer, MenuItem> mainHash2, HashMap<Integer, MenuItem> dessertHash2, Button button) {
 
 		int numberOfDays = eventDurationChoicebox.getValue();
 		
-		//Value guests = new Value(0,200,5);
-		//guests.setValue(guestsTextField.getText());
-		int numberOfGuests = Integer.parseInt(guestsTextField.getText());
+		Value guests = new Value(0,200,5);
+		guests.setValue(guestsTextField.getText());
 		
 		double appetizerTotalCost = 0.0;
 		double mainCourseTotalCost = 0.0;
@@ -187,9 +183,12 @@ public class EventPlannerController{
 			
 		}
 		
+		System.out.println(appHash.get(1).getPrice());
+		System.out.println(appetizerTotalRevenue);
 		
-		Cost costBreakdown = new Cost(appetizerTotalCost, mainCourseTotalCost, dessertTotalCost, numberOfGuests);
-		Revenue priceBreakdown = new Revenue(appetizerTotalRevenue, mainCourseTotalRevenue, dessertTotalRevenue, numberOfGuests);
+		
+		Cost costBreakdown = new Cost(appetizerTotalCost, mainCourseTotalCost, dessertTotalCost, guests.getAmount());
+		Revenue priceBreakdown = new Revenue(appetizerTotalRevenue, mainCourseTotalRevenue, dessertTotalRevenue, guests.getAmount());
 		
 		System.out.println("app" + appetizerTotalCost);
 		System.out.println("main" + mainCourseTotalCost);
@@ -210,14 +209,13 @@ public class EventPlannerController{
 		Label summaryTitle = new Label("Event Summary Page");
 		
 		VBox textBox = new VBox();
-		Label eventTotalCost = new Label();
-		eventTotalCost.setText("Your total cost for this event is: " + String.valueOf(costBreakdown.getEventTotalCost()));
-		Label eventTotalRevenue = new Label();
-		eventTotalRevenue.setText("Your total revenue for this event is:" + String.valueOf(priceBreakdown.getEventTotalPrice()));
-		Label profitOrLoss = new Label();
-		profitOrLoss.setText(result.checkProfitOrLoss());
-		Label resultAmount = new Label();
-		profitOrLoss.setText(result.findAmount());
+		
+		Label eventTotalCost = new Label("Your total cost for this event is: " + String.valueOf(costBreakdown.getEventTotalCost()));
+		Label eventTotalRevenue = new Label("Your total revenue for this event is:" + String.valueOf(priceBreakdown.getEventTotalPrice()));
+		Label profitOrLoss = new Label(result.checkProfitOrLoss());
+		Label resultAmount = new Label(result.findAmount());
+		
+		
 		
 		textBox.getChildren().addAll(eventTotalCost, eventTotalRevenue, profitOrLoss, resultAmount);
 		mainBox.getChildren().addAll(summaryTitle, textBox);
@@ -230,10 +228,11 @@ public class EventPlannerController{
 	private void getCostAndPrice(Scene scene, ItemSelected menuItems) throws InvalidValueException {
     	Scene mainScene = applicationStage.getScene();
  
-		HBox costItems = new HBox();
+		VBox costItems = new VBox();
+		
+		Label costItemsLabel = new Label("Enter Cost and Price of Each Item...");
 		
 		
-		VBox itemContainer = new VBox();
 		
 		ArrayList<String> items = new ArrayList<String>();
 		items.add(menuItems.getAppetizer());
@@ -247,34 +246,35 @@ public class EventPlannerController{
 		
 		ArrayList<TextField> costTextFields = new ArrayList<TextField>();
 		ArrayList<TextField> priceTextFields = new ArrayList<TextField>();
-		ArrayList<Value> cost = new ArrayList<Value>();
+		
+		Label errorLabel = new Label();		
 		
 		int rowCount = 0;
 		while (rowCount < items.size()) {
-			
-			String type = types.get(rowCount);
+			HBox itemContainer = new HBox();
+
 			Label itemLabel = new Label(items.get(rowCount));
-			Label costLabel = new Label("Enter Cost Per Serving:");
+			rowCount++;
+
+			Label costLabel = new Label("Cost: $");
 			TextField costTextField = new TextField();
 			costTextFields.add(costTextField);
-			Label priceLabel = new Label("Enter Price Per Serving");
+			Label priceLabel = new Label("Price: $");
 			TextField priceTextField = new TextField();
 			priceTextFields.add(priceTextField);
 
 			
 			itemContainer.getChildren().addAll(itemLabel,costLabel, costTextField,priceLabel,priceTextField);
-			
+			costItems.getChildren().addAll(itemContainer);
 
-			rowCount++;
 			
 		}
 			
-		setCostandPrice(mainScene, items, types, costTextFields, priceTextFields);
 		
 		Button doneButton = new Button ("Add Values to Directory!");
-		doneButton.setOnAction(doneEvent -> setCostandPrice(mainScene, items, types, costTextFields, priceTextFields));
+		doneButton.setOnAction(doneEvent -> setCostandPrice(mainScene, items, types, costTextFields, priceTextFields, errorLabel));
 		
-		costItems.getChildren().addAll(itemContainer,doneButton);
+		costItems.getChildren().addAll(doneButton,errorLabel);
 		
 		
 	
@@ -285,48 +285,43 @@ public class EventPlannerController{
 	
 	}
 	
-	Label costErrorLabel = new Label();
-	Label priceErrorLabel = new Label();
-
-
-
-
 	private void setCostandPrice(Scene menuSelectionScene, ArrayList<String> items, ArrayList<String> types,
-		ArrayList<TextField> costTextFields, ArrayList<TextField> priceTextFields) {
+		ArrayList<TextField> costTextFields, ArrayList<TextField> priceTextFields, Label errorLabel) {
 		applicationStage.setScene(menuSelectionScene);
-		boolean invalidEntry = false;
 		
+	
 		ArrayList<Double> costValues = new ArrayList<Double>();
 		ArrayList<Double> priceValues = new ArrayList<Double>();
 
-		
 		for (TextField costTextField : costTextFields) {
+			boolean invalidEntry = false;
 			Value costAmount = new Value(0.0, 1, 50);
     		String errorMessage = costAmount.setValue(costTextField.getText());
     		if(!errorMessage.equals("")) {
     			invalidEntry = true;
-    			costErrorLabel.setText(errorMessage);
+    			errorLabel.setText(errorMessage);
     		}
-			
-    		costAmount.setValue(costTextField.getText());
-    		costValues.add(costAmount.getAmount());
+   
+        		costAmount.setValue(costTextField.getText());
+        		costValues.add(costAmount.getAmount());
     		
-    		//System.out.println(costAmount.getAmount());
+    		System.out.println("cost"+ costAmount.getAmount());
 			
 		}
 		
 		for (TextField priceTextField : priceTextFields) {
+			boolean invalidEntry = false;
 			Value priceAmount = new Value(0.0, 1, 50);
     		String errorMessage = priceAmount.setValue(priceTextField.getText());
     		if(!errorMessage.equals("")) {
     			invalidEntry = true;
-    			costErrorLabel.setText(errorMessage);
+    			errorLabel.setText(errorMessage);
     		}
+        		priceAmount.setValue(priceTextField.getText());
+        		priceValues.add(priceAmount.getAmount());
+   
 			
-    		priceAmount.setValue(priceTextField.getText());
-    		priceValues.add(priceAmount.getAmount());
-    		
-    		//System.out.println(priceAmount.getAmount());
+    		System.out.println("price" + priceAmount.getAmount());
 			
 		}
 		
@@ -342,7 +337,8 @@ public class EventPlannerController{
 			itemsMasterList.add(menuOption);
 			m++;
 			
-			//System.out.println(menuOption.getCost());
+			System.out.println("cost" + menuOption.getCost());
+			System.out.println("price" + menuOption.getPrice());
 
 		}
 		
@@ -355,7 +351,6 @@ public class EventPlannerController{
 		applicationStage.setScene(mainScene);	
 		
 		String type = "";
-		String name = "";
 		int num = 0;
 		
 		//get key for day
