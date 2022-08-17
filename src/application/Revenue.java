@@ -4,9 +4,9 @@ public class Revenue extends ProfitLoss {
 	private double appRev;
 	private double mainRev;
 	private double dessertRev;
-	private double guests;
+	private int guests;
 
-	public Revenue(double appRev, double mainRev, double dessertRev, double guests) {
+	public Revenue(double appRev, double mainRev, double dessertRev, int guests) {
 		this.appRev = appRev;
 		this.mainRev = mainRev;
 		this.dessertRev = dessertRev;
@@ -33,7 +33,7 @@ public class Revenue extends ProfitLoss {
 		return this.dessertRev;
 	}
 	
-	public double getGuests() {
+	public int getGuests() {
 		return this.guests;
 	}
 	
@@ -49,7 +49,7 @@ public class Revenue extends ProfitLoss {
 		this.dessertRev = dessert;
 	}
 	
-	public void setGuests(double guests) {
+	public void setGuests(int guests) {
 		this.guests = guests;
 	}
 
