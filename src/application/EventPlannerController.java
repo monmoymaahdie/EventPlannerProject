@@ -152,8 +152,7 @@ public class EventPlannerController{
 	private void calculateTotal(VBox mainScene, HashMap<Integer, MenuItem> appHash2,
 			HashMap<Integer, MenuItem> mainHash2, HashMap<Integer, MenuItem> dessertHash2, Button button, Label menuErrorLabel) {
 
-		int numberOfDays = 0;
-		try{eventDurationChoicebox.getValue();
+		int numberOfDays = eventDurationChoicebox.getValue();
 		
 		int guests = 0;
 		
