@@ -14,19 +14,15 @@ public class ProfitLoss {
 		this.totalPrice = eventTotalPrice;
 	}
 
-    int getPercentage() {
-       int percentage = (int) (((this.totalPrice - this.totalCost)/this.totalPrice)*100);
-       return percentage;
-    }
-    
+ 
     String checkProfitOrLoss() {
-    	int percentage = getPercentage();
+    	double percentage = ((this.totalPrice - this.totalCost)/this.totalPrice) * 100;
     	String message = "";
-    	if (this.totalCost > this.totalPrice) {
-    		message = String.format("Congratulations! You've made a %c % profit!", percentage);
-    	}
     	if (this.totalCost < this.totalPrice) {
-    		message = String.format("Oh no! You're at a %c % loss! Update Menu!", percentage);
+    		message = "Congratulations! You've made a " + String.valueOf(percentage) + "profit!";
+    	}
+    	if (this.totalCost > this.totalPrice) {
+    		message = "Oh no! You're at a " + String.valueOf(percentage) + " loss! Update Menu!";
     	}
 		return message;
     	
@@ -36,10 +32,10 @@ public class ProfitLoss {
     	String amountMessage = "";
     	double calculatedAmount = this.totalPrice - this.totalCost;
     	if(calculatedAmount> 0) {
-    		amountMessage = String.format("You've made a profit of $%c!", calculatedAmount);
+    		amountMessage = "You've made a profit of " + calculatedAmount;
     	}
     	if(calculatedAmount < 0){
-    		amountMessage = String.format("You've made a loss of $%c!", calculatedAmount);
+    		amountMessage = "You've made a loss of " + calculatedAmount;
     	}
     	if(calculatedAmount == 0) {
     		amountMessage = "Sorry! You didn't make any profit...";
