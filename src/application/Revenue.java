@@ -1,6 +1,6 @@
 package application;
 
-public class Revenue {
+public class Revenue extends ProfitLoss {
 	private double appRev;
 	private double mainRev;
 	private double dessertRev;
