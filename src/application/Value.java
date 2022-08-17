@@ -1,4 +1,3 @@
-
 package application;
 
 public class Value {
@@ -15,14 +14,14 @@ public class Value {
 
 
 	public String setValue(String valueAsString) {
-		String errorMessage = " ";
+		String errorMessage =" ";
 		boolean validEntry = true;
 		if (!valueAsString.isEmpty()) {
 			for (char c: valueAsString.toCharArray()) {
 				if (!Character.isDigit(c)) {
 					if (!valueAsString.matches("\\d+\\.\\d+")) {
 	    				validEntry = false;
-	    				errorMessage = String.format("Do not use %c. Make sure to enter a number.", c);
+	    				errorMessage = String.format("Do not use %c in a grade. Make sure to enter a number.", c);
 	    			}
 				}
 			}
