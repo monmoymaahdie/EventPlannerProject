@@ -190,14 +190,35 @@ public class EventPlannerController{
 		System.out.println("main" + mainCourseTotalCost);
 		System.out.println("dessert" + dessertTotalCost);
 		
+		ProfitLoss result = new ProfitLoss(costBreakdown.getEventTotalCost(),priceBreakdown.getEventTotalPrice());
+		
 		Button endButton = new Button("Event Summary");
-		endButton.setOnAction(endEvent -> eventSummaryPage(applicationStage.getScene(), costBreakdown, priceBreakdown));
+		endButton.setOnAction(endEvent -> eventSummaryPage(applicationStage.getScene(), costBreakdown, priceBreakdown, result));
+		
+		mainScene.getChildren().add(endButton);
 	
 	
 	
 	}
 
-	private void eventSummaryPage(Scene scene, Cost costBreakdown, Revenue priceBreakdown) {
+	private void eventSummaryPage(Scene scene, Cost costBreakdown, Revenue priceBreakdown, ProfitLoss result) {
+		
+		VBox mainBox = new VBox();
+		
+		Label summaryTitle = new Label("Event Summary Page");
+		
+		VBox textBox = new VBox();
+		Label eventTotalCost = new Label();
+		eventTotalCost.setText(String.format("Your total cost for this event is: $%c", costBreakdown.getEventTotalCost()));
+		Label eventTotalRevenue = new Label();
+		eventTotalRevenue.setText(String.format("Your total revenue for this event is: $%c", priceBreakdown.getEventTotalPrice()));
+		Label profitOrLoss = new Label();
+		profitOrLoss.setText(result.checkProfitOrLoss());
+		Label resultAmount = new Label();
+		profitOrLoss.setText(result.findAmount());
+		
+		textBox.getChildren().addAll(eventTotalCost, eventTotalRevenue, profitOrLoss, resultAmount);
+		mainBox.getChildren().addAll(summaryTitle, textBox);
 		
 	}
 
