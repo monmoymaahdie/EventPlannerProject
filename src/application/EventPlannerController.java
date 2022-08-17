@@ -208,12 +208,27 @@ public class EventPlannerController{
 		
 		Label summaryTitle = new Label("Event Summary Page");
 		
+		
 		VBox textBox = new VBox();
 		
 		Label eventTotalCost = new Label("Your total cost for this event is: " + String.valueOf(costBreakdown.getEventTotalCost()));
 		Label eventTotalRevenue = new Label("Your total revenue for this event is:" + String.valueOf(priceBreakdown.getEventTotalPrice()));
 		Label profitOrLoss = new Label(result.checkProfitOrLoss());
 		Label resultAmount = new Label(result.findAmount());
+		
+		//padding
+		VBox.setMargin(summaryTitle, new Insets(10,30,10,30)); 
+		VBox.setMargin(eventTotalCost, new Insets(5,30,10,30)); 
+		VBox.setMargin(eventTotalRevenue, new Insets(5,30,10,30)); 
+		VBox.setMargin(profitOrLoss, new Insets(5,30,10,30)); 
+		VBox.setMargin(resultAmount, new Insets(5,30,30,30)); 
+		
+		//font
+		summaryTitle.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 30)); 
+		eventTotalCost.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.ITALIC, 20)); 
+		eventTotalRevenue.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.ITALIC, 20)); 
+		profitOrLoss.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.ITALIC, 20)); 
+		resultAmount.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.ITALIC, 20)); 
 		
 		
 		
@@ -224,14 +239,16 @@ public class EventPlannerController{
 		applicationStage.setScene(summaryScene);
 		
 	}
+	
+	
 
 	private void getCostAndPrice(Scene scene, ItemSelected menuItems) throws InvalidValueException {
     	Scene mainScene = applicationStage.getScene();
  
 		VBox costItems = new VBox();
-		
-		Label costItemsLabel = new Label("Enter Cost and Price of Each Item...");
-		
+			
+		Label errorLabel = new Label("Enter cost and price of each item.");
+
 		
 		
 		ArrayList<String> items = new ArrayList<String>();
@@ -247,7 +264,6 @@ public class EventPlannerController{
 		ArrayList<TextField> costTextFields = new ArrayList<TextField>();
 		ArrayList<TextField> priceTextFields = new ArrayList<TextField>();
 		
-		Label errorLabel = new Label();		
 		
 		int rowCount = 0;
 		while (rowCount < items.size()) {
@@ -262,6 +278,14 @@ public class EventPlannerController{
 			Label priceLabel = new Label("Price: $");
 			TextField priceTextField = new TextField();
 			priceTextFields.add(priceTextField);
+			
+			itemLabel.setPadding(new Insets(5,10,20,10));
+			costLabel.setPadding(new Insets(5,10,20,50));
+			costTextField.setPadding(new Insets(5,0,5,0));
+			priceLabel.setPadding(new Insets(5,30,10,50));
+			priceTextField.setPadding(new Insets(5,0,5,0));
+			
+			itemLabel.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 12)); 
 
 			
 			itemContainer.getChildren().addAll(itemLabel,costLabel, costTextField,priceLabel,priceTextField);
@@ -272,9 +296,9 @@ public class EventPlannerController{
 			
 		
 		Button doneButton = new Button ("Add Values to Directory!");
-		doneButton.setOnAction(doneEvent -> setCostandPrice(mainScene, items, types, costTextFields, priceTextFields, errorLabel));
+		doneButton.setOnAction(doneEvent -> setCostandPrice(mainScene,errorLabel, items, types, costTextFields, priceTextFields));
 		
-		costItems.getChildren().addAll(doneButton,errorLabel);
+		costItems.getChildren().addAll(doneButton, errorLabel);
 		
 		
 	
@@ -285,20 +309,20 @@ public class EventPlannerController{
 	
 	}
 	
-	private void setCostandPrice(Scene menuSelectionScene, ArrayList<String> items, ArrayList<String> types,
-		ArrayList<TextField> costTextFields, ArrayList<TextField> priceTextFields, Label errorLabel) {
-		applicationStage.setScene(menuSelectionScene);
+	private void setCostandPrice(Scene mainScene, Label valueErrorLabel, ArrayList<String> items, ArrayList<String> types,
+		ArrayList<TextField> costTextFields, ArrayList<TextField> priceTextFields) {
+
 		
-	
 		ArrayList<Double> costValues = new ArrayList<Double>();
 		ArrayList<Double> priceValues = new ArrayList<Double>();
-		boolean invalidEntry = false;
+		boolean validEntry = true;
 		for (TextField costTextField : costTextFields) {
 			Value costAmount = new Value(0.0, 1, 50);
     		String errorMessage = costAmount.setValue(costTextField.getText());
     		if(!errorMessage.equals("")) {
-    			invalidEntry = true;
-    			errorLabel.setText(errorMessage);
+    			validEntry = false;
+    			valueErrorLabel.setText(errorMessage);
+
     		}
    
         		costAmount.setValue(costTextField.getText());
@@ -312,8 +336,8 @@ public class EventPlannerController{
 			Value priceAmount = new Value(0.0, 1, 50);
     		String errorMessage = priceAmount.setValue(priceTextField.getText());
     		if(!errorMessage.equals("")) {
-    			invalidEntry = true;
-    			errorLabel.setText(errorMessage);
+    			validEntry = false;
+    			valueErrorLabel.setText(errorMessage);
     		}
         		priceAmount.setValue(priceTextField.getText());
         		priceValues.add(priceAmount.getAmount());
@@ -322,7 +346,7 @@ public class EventPlannerController{
     		System.out.println("price" + priceAmount.getAmount());
 			
 		}
-		
+			
 		ArrayList<MenuItem> itemsMasterList = new ArrayList<>();
 		int m = 0;
 		while (m < items.size()) {
@@ -340,14 +364,16 @@ public class EventPlannerController{
 
 		}
 		
-		storeTotalCostAndProfit(menuSelectionScene, itemsMasterList);
+		
+		if(validEntry) {
+			applicationStage.setScene(mainScene);
+			storeTotalCostAndProfit(itemsMasterList);
+		}
 
 	}
 
-	private void storeTotalCostAndProfit(Scene mainScene, ArrayList<MenuItem>itemsList ) {
-		
-		applicationStage.setScene(mainScene);	
-		
+	private void storeTotalCostAndProfit(ArrayList<MenuItem>itemsList ) {
+				
 		String type = "";
 		int num = 0;
 		
@@ -378,7 +404,5 @@ public class EventPlannerController{
 	public void setApplicationStage(Stage primaryStage) {
 		this.applicationStage = primaryStage;
 	}
-    
-    
-
 }
+
