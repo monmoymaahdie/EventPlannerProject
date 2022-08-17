@@ -49,7 +49,7 @@ public class EventPlannerController{
      * @param event on action of "Start Event: button press in the main event start scene.
      */
     private void startEvent(ActionEvent event) {
-    	System.out.println("hello! Testing push");
+    	System.out.println("hello! Testing push agen");
     	Scene mainScene = applicationStage.getScene();
     	
     	VBox menuSelect = new VBox();
