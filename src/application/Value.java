@@ -11,7 +11,18 @@ public class Value {
 		this.max = max;
 	}
 	
-
+	// new validation
+	public boolean checkValue(String valueAsString) {
+		if (valueAsString.length() != 0) {
+			for (int i = 0; i < valueAsString.length(); i++) {
+				if (Character.isLetter(valueAsString.charAt(i)) == true) {
+					return false;
+				}
+			}
+		}
+		
+		return false;
+	}
 
 	public String setValue(String valueAsString) {
 		String errorMessage =" ";

@@ -108,17 +108,15 @@ public class EventPlannerController{
     		
     		
     		ChoiceBox<String> mainCourseOptions = new ChoiceBox<String>(FXCollections.observableArrayList(MainCourse.getMainCourse()));
-    		//mainCourseOptions.getItems().addAll("Placeholder", "Placeholder","Placeholder","Placeholder",
-    				//"Placeholder","Placeholder");
     		
     		ChoiceBox<String> dessertOptions = new ChoiceBox<String>(FXCollections.observableArrayList(Dessert.getDessert()));
-    		//dessertOptions.getItems().addAll("Placeholder", "Placeholder","Placeholder","Placeholder",
-    				//"Placeholder","Placeholder");
+    	
     		
     		
     		
     		//Button press to change to scene where user can enter price of items
     		Button addCost = new Button("Enter Cost");
+    		
     		
     		
     		
@@ -147,41 +145,86 @@ public class EventPlannerController{
     		HBox.setMargin(addCost, new Insets(0,5,10,5));
     	}
     	
+    	HBox buttons = new HBox();
     	Button calculateTotalButton = new Button("Calculate Total");
-    	calculateTotalButton.setOnAction(calculateEvent -> calculateTotal(applicationStage.getScene(), appHash, mainHash, dessertHash));
-    	
     	Button endButton = new Button("Event Summary");
-    	//endButton.setOnAction(endEvent -> summaryPage(applicationStage.getScene(),));
-    	menuSelect.getChildren().add(calculateTotalButton);
+    	calculateTotalButton.setOnAction(calculateEvent -> calculateTotal(menuSelect, appHash, mainHash, dessertHash,endButton));
+    	
+    	buttons.getChildren().addAll(calculateTotalButton,endButton);
+    	
+    	menuSelect.getChildren().addAll(buttons);
     }
 
-    double appetizerTotalCost = 0.0;
+    /**double appetizerTotalCost = 0.0;
 	double mainCourseTotalCost = 0.0;
 	double dessertTotalCost = 0.0;
-	
-	private void calculateTotal(Scene scene, HashMap<Integer, MenuItem> appHash2,
-			HashMap<Integer, MenuItem> mainHash2, HashMap<Integer, MenuItem> dessertHash2) {
+	**/
+	private void calculateTotal(VBox mainScene, HashMap<Integer, MenuItem> appHash2,
+			HashMap<Integer, MenuItem> mainHash2, HashMap<Integer, MenuItem> dessertHash2, Button button) {
 
-	int numberOfDays = eventDurationChoicebox.getValue();
-	
-	double appetizerTotalCost = 0.0;
-	double mainCourseTotalCost = 0.0;
-	double dessertTotalCost = 0.0;
-	//for appetizer
-	for(int i = 1; i < appHash.size()+1; i++) {
-		appetizerTotalCost += appHash.get(i).getCost();
-		mainCourseTotalCost += mainHash.get(i).getCost();
-		dessertTotalCost += dessertHash.get(i).getCost();
+		int numberOfDays = eventDurationChoicebox.getValue();
 		
+		//Value guests = new Value(0,200,5);
+		//guests.setValue(guestsTextField.getText());
+		int numberOfGuests = Integer.parseInt(guestsTextField.getText());
+		
+		double appetizerTotalCost = 0.0;
+		double mainCourseTotalCost = 0.0;
+		double dessertTotalCost = 0.0;
+		
+		double appetizerTotalRevenue = 0.0;
+		double mainCourseTotalRevenue = 0.0;
+		double dessertTotalRevenue = 0.0;
+		//for appetizer
+		for(int i = 1; i < appHash.size()+1; i++) {
+			appetizerTotalCost += appHash.get(i).getCost();
+			mainCourseTotalCost += mainHash.get(i).getCost();
+			dessertTotalCost += dessertHash.get(i).getCost();
+			
+			appetizerTotalRevenue += appHash.get(i).getPrice();
+			mainCourseTotalRevenue += mainHash.get(i).getPrice();
+			dessertTotalRevenue += dessertHash.get(i).getPrice();		
+			
+		}
+		
+		
+		Cost costBreakdown = new Cost(appetizerTotalCost, mainCourseTotalCost, dessertTotalCost, numberOfGuests);
+		Revenue priceBreakdown = new Revenue(appetizerTotalRevenue, mainCourseTotalRevenue, dessertTotalRevenue, numberOfGuests);
+		
+		System.out.println("app" + appetizerTotalCost);
+		System.out.println("main" + mainCourseTotalCost);
+		System.out.println("dessert" + dessertTotalCost);
+		
+		ProfitLoss result = new ProfitLoss(costBreakdown.getEventTotalCost(),priceBreakdown.getEventTotalPrice());
+		
+		
+		button.setOnAction(endEvent -> eventSummaryPage(applicationStage.getScene(), costBreakdown, priceBreakdown, result));
+		
+	
 	}
-	
-	System.out.println("app" + appetizerTotalCost);
-	System.out.println("main" + mainCourseTotalCost);
-	System.out.println("dessert" + dessertTotalCost);
-	System.out.println("hello");
-	
-	
-	
+
+	private void eventSummaryPage(Scene scene, Cost costBreakdown, Revenue priceBreakdown, ProfitLoss result) {
+		
+		VBox mainBox = new VBox();
+		
+		Label summaryTitle = new Label("Event Summary Page");
+		
+		VBox textBox = new VBox();
+		Label eventTotalCost = new Label();
+		eventTotalCost.setText("Your total cost for this event is: " + String.valueOf(costBreakdown.getEventTotalCost()));
+		Label eventTotalRevenue = new Label();
+		eventTotalRevenue.setText("Your total revenue for this event is:" + String.valueOf(priceBreakdown.getEventTotalPrice()));
+		Label profitOrLoss = new Label();
+		profitOrLoss.setText(result.checkProfitOrLoss());
+		Label resultAmount = new Label();
+		profitOrLoss.setText(result.findAmount());
+		
+		textBox.getChildren().addAll(eventTotalCost, eventTotalRevenue, profitOrLoss, resultAmount);
+		mainBox.getChildren().addAll(summaryTitle, textBox);
+		
+		Scene summaryScene = new Scene(mainBox);
+		applicationStage.setScene(summaryScene);
+		
 	}
 
 	private void getCostAndPrice(Scene scene, ItemSelected menuItems) throws InvalidValueException {
