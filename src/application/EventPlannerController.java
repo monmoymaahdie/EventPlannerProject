@@ -145,10 +145,14 @@ public class EventPlannerController{
     		HBox.setMargin(addCost, new Insets(0,5,10,5));
     	}
     	
+    	HBox buttons = new HBox();
     	Button calculateTotalButton = new Button("Calculate Total");
-    	calculateTotalButton.setOnAction(calculateEvent -> calculateTotal(menuSelect, appHash, mainHash, dessertHash));
+    	Button endButton = new Button("Event Summary");
+    	calculateTotalButton.setOnAction(calculateEvent -> calculateTotal(menuSelect, appHash, mainHash, dessertHash,endButton));
     	
-    	menuSelect.getChildren().add(calculateTotalButton);
+    	buttons.getChildren().addAll(calculateTotalButton,endButton);
+    	
+    	menuSelect.getChildren().addAll(buttons);
     }
 
     /**double appetizerTotalCost = 0.0;
@@ -156,12 +160,13 @@ public class EventPlannerController{
 	double dessertTotalCost = 0.0;
 	**/
 	private void calculateTotal(VBox mainScene, HashMap<Integer, MenuItem> appHash2,
-			HashMap<Integer, MenuItem> mainHash2, HashMap<Integer, MenuItem> dessertHash2) {
+			HashMap<Integer, MenuItem> mainHash2, HashMap<Integer, MenuItem> dessertHash2, Button button) {
 
 		int numberOfDays = eventDurationChoicebox.getValue();
 		
-		Value guests = new Value(0,200,5);
-		guests.setValue(guestsTextField.getText());
+		//Value guests = new Value(0,200,5);
+		//guests.setValue(guestsTextField.getText());
+		int numberOfGuests = Integer.parseInt(guestsTextField.getText());
 		
 		double appetizerTotalCost = 0.0;
 		double mainCourseTotalCost = 0.0;
@@ -183,8 +188,8 @@ public class EventPlannerController{
 		}
 		
 		
-		Cost costBreakdown = new Cost(appetizerTotalCost, mainCourseTotalCost, dessertTotalCost, guests.getAmount());
-		Revenue priceBreakdown = new Revenue(appetizerTotalRevenue, mainCourseTotalRevenue, dessertTotalRevenue, guests.getAmount());
+		Cost costBreakdown = new Cost(appetizerTotalCost, mainCourseTotalCost, dessertTotalCost, numberOfGuests);
+		Revenue priceBreakdown = new Revenue(appetizerTotalRevenue, mainCourseTotalRevenue, dessertTotalRevenue, numberOfGuests);
 		
 		System.out.println("app" + appetizerTotalCost);
 		System.out.println("main" + mainCourseTotalCost);
@@ -192,12 +197,9 @@ public class EventPlannerController{
 		
 		ProfitLoss result = new ProfitLoss(costBreakdown.getEventTotalCost(),priceBreakdown.getEventTotalPrice());
 		
-		Button endButton = new Button("Event Summary");
-		endButton.setOnAction(endEvent -> eventSummaryPage(applicationStage.getScene(), costBreakdown, priceBreakdown, result));
 		
-		mainScene.getChildren().add(endButton);
-	
-	
+		button.setOnAction(endEvent -> eventSummaryPage(applicationStage.getScene(), costBreakdown, priceBreakdown, result));
+		
 	
 	}
 
@@ -209,9 +211,9 @@ public class EventPlannerController{
 		
 		VBox textBox = new VBox();
 		Label eventTotalCost = new Label();
-		eventTotalCost.setText(String.format("Your total cost for this event is: $%c", costBreakdown.getEventTotalCost()));
+		eventTotalCost.setText("Your total cost for this event is: " + String.valueOf(costBreakdown.getEventTotalCost()));
 		Label eventTotalRevenue = new Label();
-		eventTotalRevenue.setText(String.format("Your total revenue for this event is: $%c", priceBreakdown.getEventTotalPrice()));
+		eventTotalRevenue.setText("Your total revenue for this event is:" + String.valueOf(priceBreakdown.getEventTotalPrice()));
 		Label profitOrLoss = new Label();
 		profitOrLoss.setText(result.checkProfitOrLoss());
 		Label resultAmount = new Label();
@@ -219,6 +221,9 @@ public class EventPlannerController{
 		
 		textBox.getChildren().addAll(eventTotalCost, eventTotalRevenue, profitOrLoss, resultAmount);
 		mainBox.getChildren().addAll(summaryTitle, textBox);
+		
+		Scene summaryScene = new Scene(mainBox);
+		applicationStage.setScene(summaryScene);
 		
 	}
 
