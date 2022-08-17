@@ -366,9 +366,9 @@ public class EventPlannerController{
 		
 		
 		if(validEntry) {
-			applicationStage.setScene(mainScene);
 			storeTotalCostAndProfit(itemsMasterList);
 		}
+		applicationStage.setScene(mainScene);
 
 	}
 
