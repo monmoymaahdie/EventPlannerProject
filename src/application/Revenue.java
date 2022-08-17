@@ -21,15 +21,15 @@ public class Revenue extends ProfitLoss {
 		return total;
 	}
 
-	public double getAppCost() {
+	public double getAppRev() {
 		return this.appRev;
 	}
 	
-	public double getMainCost() {
+	public double getMainRev() {
 		return this.mainRev;
 	}
 	
-	public double getDessertCost() {
+	public double getDessertRev() {
 		return this.dessertRev;
 	}
 	
@@ -37,15 +37,15 @@ public class Revenue extends ProfitLoss {
 		return this.guests;
 	}
 	
-	public void setAppCost(double app) {
+	public void setAppRev(double app) {
 		this.appRev = app;
 	}
 
-	public void setMainCost(double main) {
+	public void setMainRev(double main) {
 		this.mainRev = main;
 	}
 	
-	public void setDessertCost(double dessert) {
+	public void setDessertRev(double dessert) {
 		this.dessertRev = dessert;
 	}
 	

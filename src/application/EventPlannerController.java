@@ -45,11 +45,16 @@ public class EventPlannerController{
     private TextField guestsTextField;
     
     @FXML
+    private TextField budgetTextField;
+    
+    @FXML
     /**
      * Creates a scene to collect information about number of guests and menu selections the user wants 
      * @param event on action of "Start Event: button press in the main event start scene.
      */
+    
     private void startEvent(ActionEvent event) {
+
     	Scene mainScene = applicationStage.getScene();
     	
     	VBox menuSelect = new VBox();
@@ -62,13 +67,8 @@ public class EventPlannerController{
     	Label eventDay = new Label("");
     	
     	Label appetizerSelect = new Label("Select Appetizer");
-    	
-    	
     	Label mainCourseSelect = new Label("Select Main Course");
-    	
-    	
     	Label dessertSelect = new Label("Select Dessert");
-    	
     	
     	menuRow.getChildren().addAll(eventDay,appetizerSelect, mainCourseSelect, dessertSelect);
     	
@@ -84,7 +84,7 @@ public class EventPlannerController{
     	Label errorMessage = new Label ("");
     	
     	//Select Menu Items 
-    	menuSelection(menuSelect, errorMessage);
+    	menuSelection(menuSelect);
 
     	//set the new scene
     	Scene menuSelectionScene = new Scene(menuSelect);
@@ -93,10 +93,11 @@ public class EventPlannerController{
  
     }
     
-    private void menuSelection(VBox menuSelect, Label errorLabel) {
+    private void menuSelection(VBox menuSelect) {
     	//while loop to create labels, ChoiceBoxes, and button
     	int numberOfDays = eventDurationChoicebox.getValue();
     	int rowCount = 1;
+    	Label menuErrorLabel = new Label();
     	while (rowCount - 1 < numberOfDays) {
     		HBox menuItemRow = new HBox();
     		
@@ -104,37 +105,29 @@ public class EventPlannerController{
     		Label dayLabel = new Label("Day " + rowCount + "");
     		
     		//Create ChoiceBoxes for appetizer, main course, desserts
-    		ChoiceBox<String> appetizerOptions = new ChoiceBox<String>(FXCollections.observableArrayList(Appetizer.getAppetizer()));
-    		
-    		
+    		ChoiceBox<String> appetizerOptions = new ChoiceBox<String>(FXCollections.observableArrayList(Appetizer.getAppetizer()));    		
     		ChoiceBox<String> mainCourseOptions = new ChoiceBox<String>(FXCollections.observableArrayList(MainCourse.getMainCourse()));
-    		
     		ChoiceBox<String> dessertOptions = new ChoiceBox<String>(FXCollections.observableArrayList(Dessert.getDessert()));
     	
     		
-    		
-    		
     		//Button press to change to scene where user can enter price of items
+    		Label menuSelectionErrorLabel = new Label();
     		Button addCost = new Button("Enter Cost");
-    		
-    		
-    		
-    		
+ 
+    		//Action event for button which takes the user to the scene where they can enter cost and price values
     		addCost.setOnAction(addCostEvent ->{
-        		ItemSelected menuItemChosen = new ItemSelected(appetizerOptions.getValue(), mainCourseOptions.getValue(),dessertOptions.getValue());
     			try {
+            		ItemSelected menuItemChosen = new ItemSelected(appetizerOptions.getValue(), mainCourseOptions.getValue(),dessertOptions.getValue());
 					getCostAndPrice(applicationStage.getScene(), menuItemChosen);
-				} catch (InvalidValueException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					menuSelectionErrorLabel.setText("");
+				} catch (NullPointerException e) {
+					menuSelectionErrorLabel.setText(e.getMessage());
 				}
 
-    			
-    			
     		});
     		
     		menuItemRow.getChildren().addAll(dayLabel, appetizerOptions, mainCourseOptions, dessertOptions, addCost);
-    		menuSelect.getChildren().add(menuItemRow);
+    		menuSelect.getChildren().addAll(menuItemRow, menuSelectionErrorLabel);
     		rowCount++;
     		
     		//Setting padding
@@ -148,7 +141,7 @@ public class EventPlannerController{
     	HBox buttons = new HBox();
     	Button calculateTotalButton = new Button("Calculate Total");
     	Button endButton = new Button("Event Summary");
-    	calculateTotalButton.setOnAction(calculateEvent -> calculateTotal(menuSelect, appHash, mainHash, dessertHash,endButton));
+    	calculateTotalButton.setOnAction(calculateEvent -> calculateTotal(menuSelect, appHash, mainHash, dessertHash,endButton, menuErrorLabel));
     	
     	buttons.getChildren().addAll(calculateTotalButton,endButton);
     	
@@ -157,12 +150,21 @@ public class EventPlannerController{
 
 
 	private void calculateTotal(VBox mainScene, HashMap<Integer, MenuItem> appHash2,
-			HashMap<Integer, MenuItem> mainHash2, HashMap<Integer, MenuItem> dessertHash2, Button button) {
+			HashMap<Integer, MenuItem> mainHash2, HashMap<Integer, MenuItem> dessertHash2, Button button, Label menuErrorLabel) {
 
 		int numberOfDays = eventDurationChoicebox.getValue();
 		
-		Value guests = new Value(0,200,5);
-		guests.setValue(guestsTextField.getText());
+		int guests = 0;
+		
+		try {
+			Validation mainInput = new Validation(guestsTextField.getText(), budgetTextField.getText(), 1 , 500);
+			guests = (int) mainInput.getCost();
+			menuErrorLabel.setText("");
+		} catch (InvalidValueException ive) {
+			menuErrorLabel.setText(ive.getMessage());
+		}
+			
+		//guests.setValue(guestsTextField.getText());
 		
 		double appetizerTotalCost = 0.0;
 		double mainCourseTotalCost = 0.0;
@@ -183,12 +185,11 @@ public class EventPlannerController{
 			
 		}
 		
-		System.out.println(appHash.get(1).getPrice());
-		System.out.println(appetizerTotalRevenue);
+		//System.out.println(appetizerTotalRevenue);
 		
 		
-		Cost costBreakdown = new Cost(appetizerTotalCost, mainCourseTotalCost, dessertTotalCost, guests.getAmount());
-		Revenue priceBreakdown = new Revenue(appetizerTotalRevenue, mainCourseTotalRevenue, dessertTotalRevenue, guests.getAmount());
+		Cost costBreakdown = new Cost(appetizerTotalCost, mainCourseTotalCost, dessertTotalCost, guests);
+		Revenue priceBreakdown = new Revenue(appetizerTotalRevenue, mainCourseTotalRevenue, dessertTotalRevenue, guests);
 		
 		System.out.println("app" + appetizerTotalCost);
 		System.out.println("main" + mainCourseTotalCost);
@@ -242,15 +243,13 @@ public class EventPlannerController{
 	
 	
 
-	private void getCostAndPrice(Scene scene, ItemSelected menuItems) throws InvalidValueException {
+	private void getCostAndPrice(Scene scene, ItemSelected menuItems){
     	Scene mainScene = applicationStage.getScene();
  
 		VBox costItems = new VBox();
 			
 		Label errorLabel = new Label("Enter cost and price of each item.");
-
-		
-		
+	
 		ArrayList<String> items = new ArrayList<String>();
 		items.add(menuItems.getAppetizer());
 		items.add(menuItems.getMainCourse());
@@ -274,9 +273,11 @@ public class EventPlannerController{
 
 			Label costLabel = new Label("Cost: $");
 			TextField costTextField = new TextField();
+			costTextField.setPromptText("Enter Cost");
 			costTextFields.add(costTextField);
 			Label priceLabel = new Label("Price: $");
 			TextField priceTextField = new TextField();
+			priceTextField.setPromptText("Enter Price");
 			priceTextFields.add(priceTextField);
 			
 			itemLabel.setPadding(new Insets(5,10,20,10));
@@ -290,18 +291,14 @@ public class EventPlannerController{
 			
 			itemContainer.getChildren().addAll(itemLabel,costLabel, costTextField,priceLabel,priceTextField);
 			costItems.getChildren().addAll(itemContainer);
-
 			
 		}
-			
-		
-		Button doneButton = new Button ("Add Values to Directory!");
-		doneButton.setOnAction(doneEvent -> setCostandPrice(mainScene,errorLabel, items, types, costTextFields, priceTextFields));
+					
+		Button doneButton = new Button ("Return to Menu Selection");
+		doneButton.setOnAction(doneEvent ->setCostandPrice(mainScene, errorLabel,items, types, costTextFields, priceTextFields)); 
 		
 		costItems.getChildren().addAll(doneButton, errorLabel);
 		
-		
-	
 		//change scene
 		Scene costScene = new Scene(costItems);
 		applicationStage.setScene(costScene);
@@ -313,62 +310,30 @@ public class EventPlannerController{
 		ArrayList<TextField> costTextFields, ArrayList<TextField> priceTextFields) {
 
 		
-		ArrayList<Double> costValues = new ArrayList<Double>();
-		ArrayList<Double> priceValues = new ArrayList<Double>();
-		boolean validEntry = true;
-		for (TextField costTextField : costTextFields) {
-			Value costAmount = new Value(0.0, 1, 50);
-    		String errorMessage = costAmount.setValue(costTextField.getText());
-    		if(!errorMessage.equals("")) {
-    			validEntry = false;
-    			valueErrorLabel.setText(errorMessage);
-
-    		}
-   
-        		costAmount.setValue(costTextField.getText());
-        		costValues.add(costAmount.getAmount());
-    		
-    		System.out.println("cost"+ costAmount.getAmount());
-			
-		}
-		
-		for (TextField priceTextField : priceTextFields) {
-			Value priceAmount = new Value(0.0, 1, 50);
-    		String errorMessage = priceAmount.setValue(priceTextField.getText());
-    		if(!errorMessage.equals("")) {
-    			validEntry = false;
-    			valueErrorLabel.setText(errorMessage);
-    		}
-        		priceAmount.setValue(priceTextField.getText());
-        		priceValues.add(priceAmount.getAmount());
-   
-			
-    		System.out.println("price" + priceAmount.getAmount());
-			
-		}
-			
 		ArrayList<MenuItem> itemsMasterList = new ArrayList<>();
-		int m = 0;
-		while (m < items.size()) {
-			String type = types.get(m);
-			String name = items.get(m);
-			double costDouble = costValues.get(m);
-			double priceDouble = priceValues.get(m);
-			
-			MenuItem menuOption = new MenuItem(name,type, costDouble, priceDouble);
-			itemsMasterList.add(menuOption);
-			m++;
-			
-			System.out.println("cost" + menuOption.getCost());
-			System.out.println("price" + menuOption.getPrice());
 
+		boolean validEntry = true;
+		for (int i = 0; i < items.size(); i++) {
+			String nameOfItem = items.get(i);
+			String typeOfItem = types.get(i);
+			String cost = costTextFields.get(i).getText();
+			String price = priceTextFields.get(i).getText();
+			//
+			try {
+				Validation valuesEntered = new Validation(cost,price, 1,30);
+				MenuItem menuOptions = new MenuItem(nameOfItem, typeOfItem, valuesEntered.getCost(), valuesEntered.getPrice());
+				itemsMasterList.add(menuOptions);
+			} catch(InvalidValueException ive) {
+				valueErrorLabel.setText(ive.getMessage());
+				validEntry = false;
+			}
+			
 		}
-		
 		
 		if(validEntry) {
 			storeTotalCostAndProfit(itemsMasterList);
+			applicationStage.setScene(mainScene);
 		}
-		applicationStage.setScene(mainScene);
 
 	}
 
