@@ -292,9 +292,8 @@ public class EventPlannerController{
 	
 		ArrayList<Double> costValues = new ArrayList<Double>();
 		ArrayList<Double> priceValues = new ArrayList<Double>();
-
+		boolean invalidEntry = false;
 		for (TextField costTextField : costTextFields) {
-			boolean invalidEntry = false;
 			Value costAmount = new Value(0.0, 1, 50);
     		String errorMessage = costAmount.setValue(costTextField.getText());
     		if(!errorMessage.equals("")) {
@@ -310,7 +309,6 @@ public class EventPlannerController{
 		}
 		
 		for (TextField priceTextField : priceTextFields) {
-			boolean invalidEntry = false;
 			Value priceAmount = new Value(0.0, 1, 50);
     		String errorMessage = priceAmount.setValue(priceTextField.getText());
     		if(!errorMessage.equals("")) {
