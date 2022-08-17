@@ -11,18 +11,6 @@ public class Value {
 		this.max = max;
 	}
 	
-	// new validation
-	public boolean checkValue(String valueAsString) {
-		if (valueAsString.length() != 0) {
-			for (int i = 0; i < valueAsString.length(); i++) {
-				if (Character.isLetter(valueAsString.charAt(i)) == true) {
-					return false;
-				}
-			}
-		}
-		
-		return false;
-	}
 
 	public String setValue(String valueAsString) {
 		String errorMessage =" ";
@@ -52,16 +40,28 @@ public class Value {
 		return errorMessage;
 		}
 	
-	public double getAmount() {
-		return this.amount;
-	}
+		public double getAmount() {
+			return this.amount;
+		}
+		
+		public int getMax() {
+			return this.max;
+		}
+		
+		public int getMin() {
+			return this.min;
+		}
 
-	public int getMax() {
-		return this.max;
-	}
-	
-	public int getMin() {
-		return this.min;
-	}
+		public void setAmount(double amount) {
+			this.amount = amount;
+		}
+		
+		public void setMax(int max) {
+			this.max = max;
+		}
+		
+		public void setMin(int min) {
+			this.min = min;
+		}
 	
 	}
