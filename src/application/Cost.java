@@ -12,6 +12,7 @@ public class Cost extends ProfitLoss{
 	private double mainCost;
 	private double dessertCost;
 	private double guests;
+	private double budget;
 	
 	/**
 	 * Constructor for the costs of each individual item type and number of guests. Sets instance variables to the 
@@ -21,13 +22,15 @@ public class Cost extends ProfitLoss{
 	 * @param mainCourseTotalCost = Total cost of main course. Sets instance variable appCost to mainCourseTotalCost
 	 * @param dessertTotalCost = Total cost of the desert. Sets instance variable appCost to dessertTotalCost
 	 * @param guests = Number of guests that are estimated to come to the event. Sets instance variable guests to guests
+	 * @param budget 
 	 */
 	
-	public Cost(double appetizerTotalCost, double mainCourseTotalCost, double dessertTotalCost, double guests) {
+	public Cost(double appetizerTotalCost, double mainCourseTotalCost, double dessertTotalCost, double guests, double budget) {
 		this.appCost = appetizerTotalCost;
 		this.mainCost = mainCourseTotalCost;
 		this.dessertCost = dessertTotalCost;
 		this.guests = guests;
+		this.budget = budget;
 	}
 	
 	/**
@@ -35,12 +38,33 @@ public class Cost extends ProfitLoss{
 	 * @return total = total cost of event as a double.
 	 */
 	double getEventTotalCost() {
-		
+			
 		double total = (this.appCost + this.mainCost + this.dessertCost)*this.guests;
 		
 		return total;
 	}
 	
+	/**
+	 * Getter method to return message about budget as a string.
+	 * Checks if budget is greater, less than or equal to the cost.
+	 * @return returns the answer
+	 */
+	
+	String getBudgetCheck() {
+		double total = (this.appCost + this.mainCost + this.dessertCost)*this.guests;;
+		String message = "";
+		if (total > this.budget) {
+			message = "You should increase your budget!";
+		}
+		if (total < this.budget) {
+			message = "Good job! Your the event menu is within your budget!";
+		}
+		if (total == this.budget) {
+			message ="Wow! Your cost is the same as your budget!";
+		}
+		
+		return message;
+	}
 	/**
 	 * Gettter method to return appetizer cost as a double.
 	 * @return this.appCost
@@ -74,6 +98,14 @@ public class Cost extends ProfitLoss{
 	}
 	
 	/**
+	 * Getter method to return budget.
+	 * @return this.budget
+	 */
+	public double getBudget() {
+		return this.budget;
+	}
+	
+	/**
 	 * Setter method to set appetizer cost as a double.
 	 * @param app = appetizer cost
 	 */
@@ -103,6 +135,13 @@ public class Cost extends ProfitLoss{
 	 */
 	public void setGuests(double guests) {
 		this.guests = guests;
+	}
+	/**
+	 * Setter method to set total budget.
+	 * @param budget = total budget
+	 */
+	public void setBudget(double budget) {
+		this.budget = budget;
 	}
 }
 

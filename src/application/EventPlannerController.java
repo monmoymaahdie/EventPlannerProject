@@ -39,7 +39,7 @@ public class EventPlannerController{
 	private int j = 0;
 	
 
-	 // HashMap -> HashMap
+	 // HashMap -> Global hashmaps for each type of menu items so we can store the values and use them whenever needed 
 	 private HashMap<Integer, MenuItem> appHash= new HashMap<Integer, MenuItem>();
 	 private HashMap<Integer, MenuItem> mainHash= new HashMap<Integer, MenuItem>();
 	 private HashMap<Integer, MenuItem> dessertHash= new HashMap<Integer, MenuItem>();
@@ -144,6 +144,7 @@ public class EventPlannerController{
 
     		});
     		
+    		//populating HBox
     		menuItemRow.getChildren().addAll(dayLabel, appetizerOptions, mainCourseOptions, dessertOptions, addCost);
     		menuSelect.getChildren().addAll(menuItemRow, menuSelectionErrorLabel);
     		rowCount++;
@@ -158,39 +159,47 @@ public class EventPlannerController{
     	
     	//Creating container for calculation and summary buttons at the menu selection scene
     	HBox buttons = new HBox();
-    	Button calculateTotalButton = new Button("Calculate Total");
     	Button endButton = new Button("Event Summary");
-    	calculateTotalButton.setOnAction(calculateEvent -> calculateTotal(menuSelect, appHash, mainHash, dessertHash,endButton, menuErrorLabel));
-    	
+    	Button calculateTotalButton = new Button("Calculate Total");
+    	calculateTotalButton.setOnAction(calculateEvent -> calculateTotal(menuSelect, endButton, menuErrorLabel));
+
     	buttons.getChildren().addAll(calculateTotalButton,endButton);
     	
     	menuSelect.getChildren().addAll(buttons);
     }
 
     /**
-     * Method for calculating total
-     * @param mainScene = 
-     * @param appHash2
-     * @param mainHash2
-     * @param dessertHash2
-     * @param button
-     * @param menuErrorLabel
+     * Method for calculating total 
+     * Here we validate the input from the initial scene and invoke Cost, Profit, and Revenue classes
+     * @param mainScene = scene where its happening
+     * @param * @param button = action is set for the button label
+     * @param menuErrorLabel = error message is set by using try/exception
      */
-	private void calculateTotal(VBox mainScene, HashMap<Integer, MenuItem> appHash2,
-			HashMap<Integer, MenuItem> mainHash2, HashMap<Integer, MenuItem> dessertHash2, Button button, Label menuErrorLabel) {
-
-		int numberOfDays = eventDurationChoicebox.getValue();
+   
+    private void calculateTotal(VBox mainScene, Button button, Label menuErrorLabel) {
 		
+    	//initializing guests and budget variable 
 		int guests = 0;
+		double budget = 0;
+		
+		/**
+		 * validating guest input by invoking Validation class with name guestInput
+		 * value for price arguement in Validation in class is set to 1, because this is not need.
+		 * We only want to validate one value
+		 * We're invoking validation twice because minimum and maximum values for guests and budget are different
+		 */
 		
 		try {
-			Validation mainInput = new Validation(guestsTextField.getText(), budgetTextField.getText(), 1 , 500);
-			guests = (int) mainInput.getCost();
+			Validation guestInput = new Validation(guestsTextField.getText(), "1", 1 , 500);
+			guests = (int) guestInput.getCost();
+			Validation  budgetInput = new Validation(budgetTextField.getText(),"1", 1, 100000);
+			budget = guestInput.getCost();
 			menuErrorLabel.setText("");
 		} catch (InvalidValueException ive) {
 			menuErrorLabel.setText(ive.getMessage());
 		}
 		
+		//initializing total cost and total revenue variables for three types of menu items
 		double appetizerTotalCost = 0.0;
 		double mainCourseTotalCost = 0.0;
 		double dessertTotalCost = 0.0;
@@ -199,7 +208,7 @@ public class EventPlannerController{
 		double mainCourseTotalRevenue = 0.0;
 		double dessertTotalRevenue = 0.0;
 		
-		//for appetizer
+		//for loop to keep adding cost and revenue amount by retrieving it from the hashmaps for the items
 		for(int i = 1; i < appHash.size()+1; i++) {
 			appetizerTotalCost += appHash.get(i).getCost();
 			mainCourseTotalCost += mainHash.get(i).getCost();
@@ -211,17 +220,12 @@ public class EventPlannerController{
 			
 		}
 		
-		
-		Cost costBreakdown = new Cost(appetizerTotalCost, mainCourseTotalCost, dessertTotalCost, guests);
-		Revenue priceBreakdown = new Revenue(appetizerTotalRevenue, mainCourseTotalRevenue, dessertTotalRevenue, guests);
-		
-		System.out.println("app" + appetizerTotalCost);
-		System.out.println("main" + mainCourseTotalCost);
-		System.out.println("dessert" + dessertTotalCost);
-		
+		//invoking cost,revenue and profitloss class and passing total cost and revenue variables, guests, and budget variables as arguements
+		Cost costBreakdown = new Cost(appetizerTotalCost, mainCourseTotalCost, dessertTotalCost, guests, budget);
+		Revenue priceBreakdown = new Revenue(appetizerTotalRevenue, mainCourseTotalRevenue, dessertTotalRevenue, guests);		
 		ProfitLoss result = new ProfitLoss(costBreakdown.getEventTotalCost(),priceBreakdown.getEventTotalPrice());
 		
-		
+		//setting the action event of the summaryPage button
 		button.setOnAction(endEvent -> eventSummaryPage(applicationStage.getScene(), costBreakdown, priceBreakdown, result));
 		
 	
@@ -240,13 +244,15 @@ public class EventPlannerController{
 		Label eventTotalRevenue = new Label("Your total revenue for this event is:" + String.valueOf(priceBreakdown.getEventTotalPrice()));
 		Label profitOrLoss = new Label(result.checkProfitOrLoss());
 		Label resultAmount = new Label(result.findAmount());
+		Label budgetDisplay = new Label(costBreakdown.getBudgetCheck());
 		
 		//padding
 		VBox.setMargin(summaryTitle, new Insets(10,30,10,30)); 
 		VBox.setMargin(eventTotalCost, new Insets(5,30,10,30)); 
 		VBox.setMargin(eventTotalRevenue, new Insets(5,30,10,30)); 
 		VBox.setMargin(profitOrLoss, new Insets(5,30,10,30)); 
-		VBox.setMargin(resultAmount, new Insets(5,30,30,30)); 
+		VBox.setMargin(resultAmount, new Insets(5,30,30,30));
+		VBox.setMargin(budgetDisplay, new Insets(5,30,30,30));
 		
 		//font
 		summaryTitle.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 30)); 
@@ -255,11 +261,13 @@ public class EventPlannerController{
 		profitOrLoss.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.ITALIC, 20)); 
 		resultAmount.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.ITALIC, 20)); 
 		
+		//eventSummaryContent(appHash, mainHash, dessertHash);
 		
-		
-		textBox.getChildren().addAll(eventTotalCost, eventTotalRevenue, profitOrLoss, resultAmount);
+		//populating the VBox with contents
+		textBox.getChildren().addAll(eventTotalCost, eventTotalRevenue, profitOrLoss, resultAmount, budgetDisplay);
 		mainBox.getChildren().addAll(summaryTitle, textBox);
 		
+		//setting the new event summary scene
 		Scene summaryScene = new Scene(mainBox);
 		applicationStage.setScene(summaryScene);
 		
@@ -271,8 +279,10 @@ public class EventPlannerController{
     	Scene mainScene = applicationStage.getScene();
  
 		VBox costItems = new VBox();
+		
+		Label costAndPriceLabel = new Label("Enter cost and price of each item!");
 			
-		Label errorLabel = new Label("Enter cost and price of each item.");
+		Label errorLabel = new Label("");
 	
 		ArrayList<String> items = new ArrayList<String>();
 		items.add(menuItems.getAppetizer());
@@ -321,7 +331,7 @@ public class EventPlannerController{
 		Button doneButton = new Button ("Return to Menu Selection");
 		doneButton.setOnAction(doneEvent ->setCostandPrice(mainScene, errorLabel,items, types, costTextFields, priceTextFields)); 
 		
-		costItems.getChildren().addAll(doneButton, errorLabel);
+		costItems.getChildren().addAll(costAndPriceLabel,doneButton, errorLabel);
 		
 		//change scene
 		Scene costScene = new Scene(costItems);

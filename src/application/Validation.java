@@ -30,7 +30,7 @@ public class Validation {
 		//Checks if the value is within bounds, if not then throws InvalidValueException
 		// The exception handling try catch statements was done with some help from Jean-Charl Pretorius
 		try {
-			this.cost = Integer.parseInt(cost);
+			this.cost = Double.parseDouble(cost);
 			if (this.cost < 1 || this.cost > this.max) {
 				
 				throw new InvalidValueException(String.format("Enter a value between 1 and %c.", this.max));
@@ -54,7 +54,7 @@ public class Validation {
 
 	
 		try {
-			this.price = Integer.parseInt(price);
+			this.price = Double.parseDouble(price);
 			if (this.price < 1 || this.price > this.max) {
 				throw new InvalidValueException(String.format("Enter a value between 1 and %c.", this.max));
 			}
