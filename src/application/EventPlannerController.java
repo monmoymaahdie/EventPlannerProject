@@ -21,6 +21,13 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+/**
+ * Controller class that manages all javafx functionality, handles GUI elements and scenes, and uses methods to 
+ * ensure the data that is calcualted is displayed in the scenes as intended. It handles most of the basic functions
+ * of the event planner application.
+ * @author Monmoy
+ *
+ */
 public class EventPlannerController{
 	
 	private Stage applicationStage;
@@ -61,10 +68,12 @@ public class EventPlannerController{
     	
     	//Add scene title and ChoiceBoxes for menu items 
     	Label menuSelectTitle = new Label ("Menu Selection for Each Day");
-    	menuSelectTitle.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 20)); 
     	
+    	//Creates container for the menu selection scene
     	HBox menuRow = new HBox();
     	Label eventDay = new Label("");
+    	
+    	//Sets labels in the menu selection scene
     	
     	Label appetizerSelect = new Label("Select Appetizer");
     	Label mainCourseSelect = new Label("Select Main Course");
@@ -73,6 +82,10 @@ public class EventPlannerController{
     	menuRow.getChildren().addAll(eventDay,appetizerSelect, mainCourseSelect, dessertSelect);
     	
     	menuSelect.getChildren().addAll(menuSelectTitle, menuRow);
+    	
+    	//Set Font
+    	//https://coderslegacy.com/java/javafx-font/
+    	menuSelectTitle.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 20)); 
     	
     	// Set Padding
     	menuSelectTitle.setPadding(new Insets(0,0,20,150));
@@ -86,14 +99,20 @@ public class EventPlannerController{
     	//Select Menu Items 
     	menuSelection(menuSelect);
 
-    	//set the new scene
+    	//set the new scene to menu selection scene
     	Scene menuSelectionScene = new Scene(menuSelect);
     	applicationStage.setScene(menuSelectionScene);
 
  
     }
     
+    /**
+     * Method to dynamically create choiceboxes for menu items based on number of days. 
+     * Eg: If number of days = 4, it creates 4 rows and 3 columns (for appetizer, main and dessert)
+     * @param menuSelect = menu selection scene container (VBox)
+     */
     private void menuSelection(VBox menuSelect) {
+    	
     	//while loop to create labels, ChoiceBoxes, and button
     	int numberOfDays = eventDurationChoicebox.getValue();
     	int rowCount = 1;
@@ -138,6 +157,7 @@ public class EventPlannerController{
     		HBox.setMargin(addCost, new Insets(0,5,10,5));
     	}
     	
+    	//Creating container for calculation and summary buttons at the menu selection scene
     	HBox buttons = new HBox();
     	Button calculateTotalButton = new Button("Calculate Total");
     	Button endButton = new Button("Event Summary");
@@ -148,7 +168,15 @@ public class EventPlannerController{
     	menuSelect.getChildren().addAll(buttons);
     }
 
-
+    /**
+     * Method for calculating total
+     * @param mainScene = 
+     * @param appHash2
+     * @param mainHash2
+     * @param dessertHash2
+     * @param button
+     * @param menuErrorLabel
+     */
 	private void calculateTotal(VBox mainScene, HashMap<Integer, MenuItem> appHash2,
 			HashMap<Integer, MenuItem> mainHash2, HashMap<Integer, MenuItem> dessertHash2, Button button, Label menuErrorLabel) {
 
@@ -163,8 +191,6 @@ public class EventPlannerController{
 		} catch (InvalidValueException ive) {
 			menuErrorLabel.setText(ive.getMessage());
 		}
-			
-		//guests.setValue(guestsTextField.getText());
 		
 		double appetizerTotalCost = 0.0;
 		double mainCourseTotalCost = 0.0;
@@ -173,6 +199,7 @@ public class EventPlannerController{
 		double appetizerTotalRevenue = 0.0;
 		double mainCourseTotalRevenue = 0.0;
 		double dessertTotalRevenue = 0.0;
+		
 		//for appetizer
 		for(int i = 1; i < appHash.size()+1; i++) {
 			appetizerTotalCost += appHash.get(i).getCost();
@@ -184,8 +211,6 @@ public class EventPlannerController{
 			dessertTotalRevenue += dessertHash.get(i).getPrice();		
 			
 		}
-		
-		//System.out.println(appetizerTotalRevenue);
 		
 		
 		Cost costBreakdown = new Cost(appetizerTotalCost, mainCourseTotalCost, dessertTotalCost, guests);
