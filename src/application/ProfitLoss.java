@@ -69,10 +69,10 @@ public class ProfitLoss {
     	}
     	
     	/**
-    	 * Getter method for Total price ie the revenue
+    	 * Getter method for Total price is the revenue
     	 * @return this.totalPrice
     	 */
-    	public double getTotalPrice(){
+    	public double getTotalRev(){
     		return this.totalPrice;
     	}
     	
@@ -88,7 +88,7 @@ public class ProfitLoss {
     	 * Setter method for total price, ie revenue.
     	 * @param price = total price
     	 */
-    	public void setTotalPrice(double price){
+    	public void setTotalRev(double price){
     		this.totalPrice = price;
     	}
 }

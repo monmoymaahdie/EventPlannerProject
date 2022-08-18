@@ -45,7 +45,30 @@ public class Validation {
 				// check if the user has entered a valid digit
 				for (char c : cost.toCharArray()) {
 					if (!Character.isDigit(c)) {
-						errorMessage = "Don't include the character: " + c + "\nCost must be a positive integer.";
+						errorMessage = "Don't include the character: " + c + "Cost must be a positive integer.";
+					}
+				}
+			}
+			throw new InvalidValueException(errorMessage);
+		}
+
+	
+		try {
+			this.price = Integer.parseInt(price);
+			if (this.price < 1 || this.price > this.max) {
+				throw new InvalidValueException(String.format("Enter a value between 1 and %c.", this.max));
+			}
+			
+		//checks if the price and cost textfields are empty.
+		} catch (NumberFormatException nfe) {
+			String errorMessage = "";
+			if (price.isEmpty()) {
+				errorMessage = "Enter a price & cost value for each item.";
+			} else {
+				// check if the user has entered a valid digit
+				for (char p : price.toCharArray()) {
+					if (!Character.isDigit(p)) {
+						errorMessage = "Don't include the character: " + p + "Price must be a positive integer.";
 					}
 				}
 			}

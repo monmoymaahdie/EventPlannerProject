@@ -140,8 +140,7 @@ public class EventPlannerController{
 					getCostAndPrice(applicationStage.getScene(), menuItemChosen);
 					menuSelectionErrorLabel.setText("");
 				} catch (NullPointerException e) {
-					menuSelectionErrorLabel.setText(e.getMessage());
-				}
+					menuSelectionErrorLabel.setText(e.getMessage());				}
 
     		});
     		
@@ -345,7 +344,7 @@ public class EventPlannerController{
 			String price = priceTextFields.get(i).getText();
 			//
 			try {
-				Validation valuesEntered = new Validation(cost,price, 1,30);
+				Validation valuesEntered = new Validation(cost, price, 1,30);
 				MenuItem menuOptions = new MenuItem(nameOfItem, typeOfItem, valuesEntered.getCost(), valuesEntered.getPrice());
 				itemsMasterList.add(menuOptions);
 			} catch(InvalidValueException ive) {
