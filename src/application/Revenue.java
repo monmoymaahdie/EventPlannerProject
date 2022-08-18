@@ -36,7 +36,6 @@ public class Revenue extends ProfitLoss {
 	double getEventTotalPrice() {
 		
 		double total = (this.appRev + this.mainRev + this.dessertRev) * this.guests;
-		
 		return total;
 	}
 	
