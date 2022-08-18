@@ -230,23 +230,33 @@ public class EventPlannerController{
 		
 	
 	}
-
+    
+    /**
+     * Method for creating event summary scene that shows total cost, price/revenue and profit.
+     * @param scene = scene where the summary is displayed
+     * @param costBreakdown = total cost object of event of (type Cost)
+     * @param priceBreakdown = total revenue object of event from total prices (type Revenue)
+     * @param result = profit loss margins object (type ProfitLoss)
+     */
 	private void eventSummaryPage(Scene scene, Cost costBreakdown, Revenue priceBreakdown, ProfitLoss result) {
 		
+		// Container for summary page
 		VBox mainBox = new VBox();
 		
+		// Label for title of the scene
 		Label summaryTitle = new Label("Event Summary Page");
 		
-		
+		//Container for text boxes that display the summary information
 		VBox textBox = new VBox();
 		
+		//Labels for summary information. The inforamtion is passed in from the parameters of the method.
 		Label eventTotalCost = new Label("Your total cost for this event is: " + String.valueOf(costBreakdown.getEventTotalCost()));
 		Label eventTotalRevenue = new Label("Your total revenue for this event is:" + String.valueOf(priceBreakdown.getEventTotalPrice()));
 		Label profitOrLoss = new Label(result.checkProfitOrLoss());
 		Label resultAmount = new Label(result.findAmount());
 		Label budgetDisplay = new Label(costBreakdown.getBudgetCheck());
 		
-		//padding
+		//set padding
 		VBox.setMargin(summaryTitle, new Insets(10,30,10,30)); 
 		VBox.setMargin(eventTotalCost, new Insets(5,30,10,30)); 
 		VBox.setMargin(eventTotalRevenue, new Insets(5,30,10,30)); 
@@ -254,16 +264,13 @@ public class EventPlannerController{
 		VBox.setMargin(resultAmount, new Insets(5,30,30,30));
 		VBox.setMargin(budgetDisplay, new Insets(5,30,30,30));
 		
-		//font
+		//set font
 		summaryTitle.setFont(Font.font("Verdana", FontWeight.BOLD, FontPosture.REGULAR, 30)); 
 		eventTotalCost.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.ITALIC, 20)); 
 		eventTotalRevenue.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.ITALIC, 20)); 
 		profitOrLoss.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.ITALIC, 20)); 
 		resultAmount.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.ITALIC, 20)); 
-		budgetDisplay.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.ITALIC, 20)); 
-
-		
-		//eventSummaryContent(appHash, mainHash, dessertHash);
+		budgetDisplay.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.ITALIC, 20));
 		
 		//populating the VBox with contents
 		textBox.getChildren().addAll(eventTotalCost, eventTotalRevenue, profitOrLoss, resultAmount, budgetDisplay);
@@ -276,21 +283,31 @@ public class EventPlannerController{
 	}
 	
 	
-
+	/**
+	 * Method for creating cost and price scene where the cost and price of each individual item is added.
+	 * @param scene = scene where the cost and price input boxes are displayed
+	 * @param menuItems = menu items object that were selected from menu selection scene. (Type ItemSelected)
+	 */
 	private void getCostAndPrice(Scene scene, ItemSelected menuItems){
-    	Scene mainScene = applicationStage.getScene();
- 
+    	//Setting main scene
+		Scene mainScene = applicationStage.getScene();
+		
+		// Cointainer for cost and menu page.
 		VBox costItems = new VBox();
 		
+		//Label that instructs user to enter cost and label
 		Label costAndPriceLabel = new Label("Enter cost and price of each item!");
-			
+		
+		// Creating error label and setting it to null
 		Label errorLabel = new Label("");
 	
+		//Initializing array list of items where the type of menu items of each type is added.
 		ArrayList<String> items = new ArrayList<String>();
 		items.add(menuItems.getAppetizer());
 		items.add(menuItems.getMainCourse());
 		items.add(menuItems.getDessert());
 		
+		//Initializing array list for what type of item each menu item is
 		ArrayList<String> types = new ArrayList<String>();
 		types.add("appetizer");
 		types.add("main course");
@@ -299,14 +316,15 @@ public class EventPlannerController{
 		ArrayList<TextField> costTextFields = new ArrayList<TextField>();
 		ArrayList<TextField> priceTextFields = new ArrayList<TextField>();
 		
-		
+		// while loop to dynamically create the javafx controls for this scene.
 		int rowCount = 0;
 		while (rowCount < items.size()) {
 			HBox itemContainer = new HBox();
 
 			Label itemLabel = new Label(items.get(rowCount));
 			rowCount++;
-
+			
+			//Creating cost/price labels and text fields
 			Label costLabel = new Label("Cost: $");
 			TextField costTextField = new TextField();
 			costTextField.setPromptText("Enter Cost");
@@ -316,23 +334,28 @@ public class EventPlannerController{
 			priceTextField.setPromptText("Enter Price");
 			priceTextFields.add(priceTextField);
 			
+			//Set font
+			itemLabel.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 12)); 
+			
+			//Set Padding
 			itemLabel.setPadding(new Insets(5,10,20,10));
 			costLabel.setPadding(new Insets(5,10,20,50));
 			costTextField.setPadding(new Insets(5,0,5,0));
 			priceLabel.setPadding(new Insets(5,30,10,50));
 			priceTextField.setPadding(new Insets(5,0,5,0));
 			
-			itemLabel.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, FontPosture.REGULAR, 12)); 
 
-			
+			//Populating the containers with the textboxes and labels
 			itemContainer.getChildren().addAll(itemLabel,costLabel, costTextField,priceLabel,priceTextField);
 			costItems.getChildren().addAll(itemContainer);
 			
 		}
-					
+		
+		//Creating done button to return to menu selection scene
 		Button doneButton = new Button ("Return to Menu Selection");
 		doneButton.setOnAction(doneEvent ->setCostandPrice(mainScene, errorLabel,items, types, costTextFields, priceTextFields)); 
 		
+		// Adding label and buttons to scene
 		costItems.getChildren().addAll(costAndPriceLabel,doneButton, errorLabel);
 		
 		//change scene
@@ -342,43 +365,61 @@ public class EventPlannerController{
 	
 	}
 	
+	/**
+	 * Sets the appropriate cost values after input validation for cost and price and adds the items to a master
+	 * array list.
+	 * @param mainScene = Scene where the functions are happening
+	 * @param valueErrorLabel = Error label for incorrect input
+	 * @param items = arrayList of items
+	 * @param types = arrayList of type of item
+	 * @param costTextFields = arrayList created from the cost textfield inputs
+	 * @param priceTextFields = arrayList created from the price textfield inputs.
+	 */
 	private void setCostandPrice(Scene mainScene, Label valueErrorLabel, ArrayList<String> items, ArrayList<String> types,
 		ArrayList<TextField> costTextFields, ArrayList<TextField> priceTextFields) {
 
 		
 		ArrayList<MenuItem> itemsMasterList = new ArrayList<>();
-
+		
+		// For loop for getting name,type,cost and price of item from the array lists to be added into the master list.
 		boolean validEntry = true;
+		
 		for (int i = 0; i < items.size(); i++) {
 			String nameOfItem = items.get(i);
 			String typeOfItem = types.get(i);
 			String cost = costTextFields.get(i).getText();
 			String price = priceTextFields.get(i).getText();
-			//
+			
+			//Validating input and adding the menu options to a master list.
 			try {
 				Validation valuesEntered = new Validation(cost, price, 1,30);
 				MenuItem menuOptions = new MenuItem(nameOfItem, typeOfItem, valuesEntered.getCost(), valuesEntered.getPrice());
 				itemsMasterList.add(menuOptions);
+				
 			} catch(InvalidValueException ive) {
 				valueErrorLabel.setText(ive.getMessage());
 				validEntry = false;
 			}
-			
 		}
 		
+		// Stores the values only if they are valid and changes the scene
 		if(validEntry) {
 			storeTotalCostAndProfit(itemsMasterList);
 			applicationStage.setScene(mainScene);
 		}
 
 	}
-
+	
+	/**
+	 * Stores the values of cost and profit into the hashmaps for appetizer, main course and desserts
+	 * @param itemsList = List of all the items that were selected for the event
+	 */
 	private void storeTotalCostAndProfit(ArrayList<MenuItem>itemsList ) {
 				
 		String type = "";
 		int num = 0;
 		
-		//get key for day
+		//for loop to get key for day and add to hashmap accordingly.
 		
 		for (int i = 0; i < itemsList.size();i++) {
 			if (i % 3 == 0) {
@@ -401,7 +442,11 @@ public class EventPlannerController{
 		 	
 	
 	}
-
+	
+	/**
+	 * Sets application Stage
+	 * @param primaryStage = main stage where the scenes are build upon.
+	 */
 	public void setApplicationStage(Stage primaryStage) {
 		this.applicationStage = primaryStage;
 	}
