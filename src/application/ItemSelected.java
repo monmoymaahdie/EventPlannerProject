@@ -62,14 +62,27 @@ public class ItemSelected {
 		return this.dessert;
 	}
 	
+	/**
+	 * Setter method to set appetizer item as a string.
+	 * @param appetizer = appetizer as a string
+	 */
+	
 	public void setAppetizer(String appetizer) {
 		this.appetizer = appetizer;
 	}
 	
+	/**
+	 * Setter method to set main course item as a string.
+	 * @param mainCourse = main course as a string
+	 */
 	public void setMainCourse(String mainCourse) {
 		this.mainCourse = mainCourse;
 	}
 	
+	/**
+	 * Setter method to set dessert item as a string.
+	 * @param appetizer = dessert as a string
+	 */
 	public void setDessert(String dessert) {
 		this.dessert = dessert;
 	}

@@ -184,7 +184,7 @@ public class EventPlannerController{
 		
 		/**
 		 * validating guest input by invoking Validation class with name guestInput
-		 * value for price arguement in Validation in class is set to 1, because this is not need.
+		 * value for price argument in Validation in class is set to 1, because this is not need.
 		 * We only want to validate one value
 		 * We're invoking validation twice because minimum and maximum values for guests and budget are different
 		 */
